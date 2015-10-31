@@ -40,10 +40,33 @@ class Template extends Object {
 	public $styles = array();
 	/**
 	 * Initialize Template
-	 * @param array $template
+	 * @param string|array $template
 	 */
 	public function __construct($template) {
-		parent::__construct(json_decode(file_get_contents(TEMPLATES_PATH.$template['name'].DS.'template.json')));
-		parent::__construct($template);
+		// switch on $template type
+		switch(gettype($template)) {
+			case 'string':
+				// if it's a string load it
+				$this->load($template);
+				break;
+			case 'object':
+			case 'array':
+				// if it's an arrar or object
+				// make sure it's an object
+				$template = new Object($template);
+				// load the defaults of the templates 
+				$this->load($template->name);
+				// assign this $template
+				parent::__construct($template);
+				break;
+		}
+	}
+	/**
+	 * Initialize Template
+	 * @param string $template
+	 */
+	public function load($template) {
+		// get the template.json, parse it, and load it.
+		parent::__construct(json_decode(file_get_contents(TEMPLATES_PATH.$template.DS.'template.json')));
 	}
 }
