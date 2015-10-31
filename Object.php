@@ -49,7 +49,7 @@ class Object {
 			if(preg_match('/\w+(:\w+(\([A-z0-9,]+\))?)?(\.\(.*?\)+)/', $property, $columns)) {
 				$this->$key = new Object($data->$key, preg_replace('/^\.\(|\)$/', '', array_pop($columns)));
 			}
-			} else $this->$property = $data->$property;
+			} else if(isset($data->$property)) $this->$property = $data->$property;
 		}
 	}
 	/**
