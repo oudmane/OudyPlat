@@ -12,12 +12,12 @@ class Library extends Object {
 	 * Store Changes here
 	 * @var array
 	 */
-	private $changes = array();
+	protected $changes = array();
 	/**
 	 * Store Errors here
 	 * @var array
 	 */
-	private $errors = array();
+	protected $errors = array();
 	/**
 	 * Initialate the object
 	 * @param array|object|string|int $data
