@@ -79,7 +79,7 @@ class Object {
 		return $array;
 	}
 	/**
-	 * return the object with specific properities
+	 * return the objects with specific properities
 	 * @param array $objects
 	 * @param array|object|string $allowedProperties
 	 * @return array
@@ -88,6 +88,19 @@ class Object {
 		$array = array();
 		foreach ($objects as $object) {
 			array_push($array, new Object($object, $allowedProperties));
+		}
+		return $array;
+	}
+	/**
+	 * return an array of objects key
+	 * @param array $objects
+	 * @param string $key
+	 * @return array
+	 */
+	public static function returnKey($objects, $key) {
+		$array = array();
+		foreach($objects as $object) {
+			array_push($array, $object->$key);
 		}
 		return $array;
 	}
