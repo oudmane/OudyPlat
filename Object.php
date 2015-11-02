@@ -7,8 +7,9 @@ class Object {
 	 * Initialate the object
 	 * @param array|object $data Data to assing to this Object
 	 * @param array|object|string $allowedProperties Filter properties in $data
+	 * @param bool $forceAll Force all properties
 	 */
-	public function __construct($data = null, $allowedProperties = null) {
+	public function __construct($data = null, $allowedProperties = null, $forceAll = false) {
 		// stop if there's nothing to assing to this object
 		if(empty($data)) return;
 		// convert $data to array if it's an object
@@ -49,7 +50,10 @@ class Object {
 			if(preg_match('/\w+(:\w+(\([A-z0-9,]+\))?)?(\.\(.*?\)+)/', $property, $columns)) {
 				$this->$key = new Object($data->$key, preg_replace('/^\.\(|\)$/', '', array_pop($columns)));
 			}
-			} else if(isset($data->$property)) $this->$property = $data->$property;
+			} else if($forceAll)
+				$this->$property = isset($data->$property) ? $data->$property : null;
+			else if(isset($data->$property))
+				$this->$property = $data->$property;
 		}
 	}
 	/**
