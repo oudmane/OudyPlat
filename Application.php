@@ -429,8 +429,13 @@ class Application extends Object {
 	 * add page Keywords to Data
 	 * @param type $keywords
 	 */
-	public function addKeyword($keywords) {
-		if($keywords && !isset($this->data->keywords)) $this->data->keywords = array();
-		foreach(array_reverse($keywords) as $key) array_unshift($this->data->keywords,$key);
+	public function addKeywords($keywords) {
+		// define an array in $data->keywords if it's not defined
+		if($keywords && !isset($this->data->keywords))
+			$this->data->keywords = array();
+		// reverse the order of $keywords
+		// to prepend them to $data->keywords
+		foreach(array_reverse($keywords) as $key)
+			array_unshift($this->data->keywords, $key);
 	}
 }
