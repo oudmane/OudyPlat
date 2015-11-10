@@ -362,6 +362,23 @@ class Application extends Object {
 				$return->task = $task;
 				return json_encode($return, false);
 			break;
+			case 'sitemap':
+				ob_start();
+				if(!defined('COMPONENTS_PATH')) die('COMPONENTS_PATH not defined');
+				if(file_exists(COMPONENTS_PATH.$component.DS.'sitemaps'.DS)) {
+					include COMPONENTS_PATH.$component.DS.'sitemaps'.DS.$task.'.php';
+				} else if(file_exists(COMPONENTS_PATH.$component.DS.'sitemap.php')) {
+					include COMPONENTS_PATH.$component.DS.'sitemap.php';
+				} else if(defined('PARENT_COMPONENTS_PATH')) {
+					if(file_exists(PARENT_COMPONENTS_PATH.$component.DS.'sitemaps'.DS)) {
+						include PARENT_COMPONENTS_PATH.$component.DS.'sitemaps'.DS.$task.'.php';
+					} else if(file_exists(PARENT_COMPONENTS_PATH.$component.DS.'sitemap.php')) {
+						include PARENT_COMPONENTS_PATH.$component.DS.'sitemap.php';
+					}
+				}
+				$html = preg_replace('/^\s+|\n|\r|\t|\s+$/m', '', ob_get_clean());
+				return str_replace(' "', '"', $html);
+			break;
 			default:
 				die($position.' render not exist');
 			break;
