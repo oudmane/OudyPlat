@@ -290,8 +290,9 @@ class Application extends Object {
 				if(!defined('TEMPLATES_PATH')) die('TEMPLATES_PATH not defined');
 				$this->setHeader('html');
 				include TEMPLATES_PATH.$page->template.DS.$page->layout.'.php';
-				$html = preg_replace('/^\s+|\n|\r|\t|\s+$/m', '', ob_get_clean());
-				return str_replace(' "', '"', $html);
+				return ob_get_clean();
+//				$html = preg_replace('/^\s+|\n|\r|\t|\s+$/m', '', ob_get_clean());
+//				return str_replace(' "', '"', $html);
 				ob_clean();
 			break;
 			case 'view':
@@ -308,8 +309,7 @@ class Application extends Object {
 						include PARENT_COMPONENTS_PATH.$component.DS.'view.php';
 					}
 				}
-				$html = preg_replace('/^\s+|\n|\r|\t|\s+$/m', '', ob_get_clean());
-				return str_replace(' "', '"', $html);
+				return ob_get_clean();
 			break;
 			case 'head':
 				ob_start();
@@ -319,8 +319,7 @@ class Application extends Object {
 				} else if(defined('PARENT_COMPONENTS_PATH') && file_exists(PARENT_COMPONENTS_PATH.$page->component.DS.'head.php')) {
 					include PARENT_COMPONENTS_PATH.$page->component.DS.'head.php';
 				}
-				$html = preg_replace('/^\s+|\n|\r|\t|\s+$/m', '', ob_get_clean());
-				return str_replace(' "', '"', $html);
+				return ob_get_clean();
 			break;
 			case 'json':
 				if(!defined('COMPONENTS_PATH')) die('COMPONENTS_PATH not defined');
@@ -345,8 +344,7 @@ class Application extends Object {
 						include PARENT_MODULES_PATH.$m.'.php';
 					}
 				}
-				$html = preg_replace('/^\s+|\n|\r|\t|\s+$/m', '', ob_get_clean());
-				return str_replace(' "', '"', $html);
+				return ob_get_clean();
 			break;
 			case 'main':
 				$this->setHeader('json');
@@ -376,8 +374,7 @@ class Application extends Object {
 						include PARENT_COMPONENTS_PATH.$component.DS.'sitemap.php';
 					}
 				}
-				$html = preg_replace('/^\s+|\n|\r|\t|\s+$/m', '', ob_get_clean());
-				return str_replace(' "', '"', $html);
+				return ob_get_clean();
 			break;
 			default:
 				die($position.' render not exist');
