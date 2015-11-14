@@ -38,19 +38,28 @@ class Object {
 				// get the key
 				preg_match('/^\w+/', $property, $key);
 				$key = $key[0];
-			// if it is a function
-			if(preg_match('/^\w+:\w+(\([A-z0-9,]+\))?/', $property, $function)) {
-				// get the function
-				preg_match_all('/\w+/', $function[0], $functionName);
-				$functionName = $functionName[0][1];
-				if(preg_match('/^\w+:\w+\([A-z0-9,]+\)/', $function[0]) && $params = preg_replace('/^\w+:\w+\(|\)$/', '', $function[0])) {
-					$this->$key = $data->$functionName($params);
-				} else $this->$key = $data->$functionName();
+				// if it is a function
+				if(preg_match('/^\w+:\w+(\([A-z0-9,]+\))?/', $property, $function)) {
+					// get the function
+					preg_match_all('/\w+/', $function[0], $functionName);
+					$functionName = $functionName[0][1];
+					if(preg_match('/^\w+:\w+\([A-z0-9,]+\)/', $function[0]) && $params = preg_replace('/^\w+:\w+\(|\)$/', '', $function[0])) {
+						$data->$key = $data->$functionName($params);
+					} else $data->$key = $data->$functionName();
+				}
+				if(preg_match('/\w+(:\w+(\([A-z0-9,]+\))?)?(\.\(.*?\)+)/', $property, $columns)) {
+					$columns = preg_replace('/^\.\(|\)$/', '', array_pop($columns));
+					if(gettype($data->$key) == 'array') {
+						$keydata = $data->$key;
+						$data->$key = array();
+						for($i = 0; $i < count($keydata); $i++)
+							array_push($data->$key, new Object($keydata[$i], $columns));
+					} else
+						$data->$key = new Object($data->$key, $columns);
+				}
+				$property = $key;
 			}
-			if(preg_match('/\w+(:\w+(\([A-z0-9,]+\))?)?(\.\(.*?\)+)/', $property, $columns)) {
-				$this->$key = new Object($data->$key, preg_replace('/^\.\(|\)$/', '', array_pop($columns)));
-			}
-			} else if($forceAll)
+			if($forceAll)
 				$this->$property = isset($data->$property) ? $data->$property : null;
 			else if(isset($data->$property))
 				$this->$property = $data->$property;
