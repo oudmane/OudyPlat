@@ -43,7 +43,8 @@ class Object {
 					// get the function
 					preg_match_all('/\w+/', $function[0], $functionName);
 					$functionName = $functionName[0][1];
-					if(preg_match('/^\w+:\w+\([A-z0-9,]+\)/', $function[0]) && $params = preg_replace('/^\w+:\w+\(|\)$/', '', $function[0])) {
+					if(preg_match('/^\w+:\w+\([A-z0-9,]+\)/', $function[0])) {
+						$params = preg_replace('/^\w+:\w+\(|\)$/', '', $function[0]);
 						$data->$key = $data->$functionName($params);
 					} else $data->$key = $data->$functionName();
 				}
