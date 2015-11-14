@@ -52,7 +52,7 @@ class Session extends Object {
 			$this->id = InCookie::get($configuration['cookie']);
 			if(empty($this->id)) {
 				$this->id = Crypt::genRandomPassword(32);
-				InCookie::set($configuration['cookie'], $this->id, 0, '/', $configuration['domain'], true);
+				InCookie::set($configuration['cookie'], $this->id, 0, '/', $configuration['domain']);
 			}
 //			if(isset($configuration['id'])) {
 //				session_id($configuration['id']);
