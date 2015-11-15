@@ -18,7 +18,7 @@ class Object {
 			// convert the allowed types to arrays if it's a string
 			if(gettype($allowedProperties) == 'string') {
 				// $allowedProperties = explode(',', $allowedProperties);
-				preg_match_all('/\w+(:\w+(\([A-z0-9,]+\))?)?(\.\(.*?\)+)?/', $allowedProperties, $allowedProperties);
+				preg_match_all('/\w+(:\w+(\([A-z0-9,]+\))?)?(\.(\(((?>[^()]+)|(?-2))*\)))?/', $allowedProperties, $allowedProperties);
 				$allowedProperties = $allowedProperties[0];
 			}
 			// convert the allowed types to arrays if it's an object
@@ -48,8 +48,8 @@ class Object {
 						$data->$key = $data->$functionName($params);
 					} else $data->$key = $data->$functionName();
 				}
-				if(preg_match('/\w+(:\w+(\([A-z0-9,]+\))?)?(\.\(.*?\)+)/', $property, $columns)) {
-					$columns = preg_replace('/^\.\(|\)$/', '', array_pop($columns));
+				if(preg_match('/\w+(:\w+(\([A-z0-9,]+\))?)?(\.(\(((?>[^()]+)|(?-2))*\)))/', $property)) {
+					$columns = preg_replace('/^\w+(:\w+(\([A-z0-9,]+\))?)?\.\(|\)$/', '', $property);
 					if(gettype($data->$key) == 'array') {
 						$keydata = $data->$key;
 						$data->$key = array();
