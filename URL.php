@@ -68,7 +68,7 @@ class URL extends Object {
 	public function inRequest($key) {
 		if($this->inPath($key))
 			return $this->inPath($key, true);
-		if(in_array($key, $this->queries))
+		if(array_key_exists($key, $this->queries))
 			return $this->queries[$key];
 		return false;
 	}
