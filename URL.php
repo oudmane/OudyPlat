@@ -19,6 +19,16 @@ class URL extends Object {
 	 */
 	public $paths = array();
 	/**
+	 * query string
+	 * @var string
+	 */
+	public $query = '';
+	/**
+	 * query string as array
+	 * @var array
+	 */
+	public $queries = array();
+	/**
 	 * Initialize URL Object with an URL
 	 * @param string $url
 	 */
@@ -53,6 +63,13 @@ class URL extends Object {
 			}
 			return true;
 		}
+		return false;
+	}
+	public function inRequest($key) {
+		if($this->inPath($key))
+			return $this->inPath($key, true);
+		if(in_array($key, $this->queries))
+			return $this->queries[$key];
 		return false;
 	}
 	public function getURL($secure = null) {
