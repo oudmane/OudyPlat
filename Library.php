@@ -287,6 +287,12 @@ class Library extends Object {
 				break;
 		}
 	}
+	public function debug() {
+		$object = new Object($this);
+		$object->errors = $this->error();
+		$object->changes = $this->changed();
+		return $object;
+	}
 //	public function __get($key) {
 //		switch($key) {
 //			case 'errors':
