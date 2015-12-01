@@ -117,6 +117,13 @@ class Database {
 		return $this->statement->fetchObject();
 	}
 	/**
+	 * return array of objects with rows values
+	 * @return array
+	 */
+	public function fetchAllObject() {
+		return $this->statement->fetchAll(PDO::FETCH_OBJ);
+	}
+	/**
 	 * return row count
 	 * @return int
 	 */
