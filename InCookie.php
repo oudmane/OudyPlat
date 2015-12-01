@@ -17,6 +17,7 @@ class InCookie {
 		return $value;
 	}
 	public static function destroy($key) {
+		setcookie($key, null, -1);
 		unset($_COOKIE[$key]);
 	}
 }
