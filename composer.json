@@ -13,6 +13,11 @@
         }
     ],
     "require": {
-        "php" : ">5.2.4"
+        "php" : ">=5.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "OudyPlat\\": "src/"
+        }
     }
 }
