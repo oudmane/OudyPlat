@@ -1,0 +1,13 @@
+{
+    "name": "oudmane/oudyplat",
+    "description": "OudyPlat is a framework for PHP developed to build robust Web Applications",
+    "type": "library",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Ayoub Oudmane",
+            "email": "ayoub@oudmane.me"
+        }
+    ],
+    "require": {}
+}
