@@ -63,13 +63,9 @@ class URL extends Object {
 				if(isset($this->paths[$i+1]))
 					// return next path
 					return $this->paths[$i+1];
-                
-                else
-                    return false;
-			} else
-                return true;
-		} else
-            return false;
+			}
+		}
+        return false;
 	}
 	public function inRequest($key) {
 		if($this->inPath($key))
