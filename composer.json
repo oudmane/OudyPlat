@@ -16,7 +16,7 @@
         "php" : ">=5.4"
     },
     "autoload": {
-        "psr-": {
+        "psr-0": {
             "OudyPlat": "src/"
         }
     }
