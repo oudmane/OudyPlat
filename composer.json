@@ -3,11 +3,16 @@
     "description": "OudyPlat is a framework for PHP developed to build robust Web Applications",
     "type": "library",
     "license": "Apache-2.0",
+    "homepage": "https://github.com/Oudmane/OudyPlat",
+    "keywords": ["oudyplat", "oudy", "plat", "php", "web", "application"],
     "authors": [
         {
             "name": "Ayoub Oudmane",
-            "email": "ayoub@oudmane.me"
+            "email": "ayoub@oudmane.me",
+            "homepage": "https://github.com/Oudmane"
         }
     ],
-    "require": {}
+    "require": {
+        "php" : ">5.2.4"
+    }
 }
