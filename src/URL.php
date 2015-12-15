@@ -68,7 +68,8 @@ class URL extends Object {
 				if(isset($this->paths[$i+1]))
 					// return next path
 					return $this->paths[$i+1];
-			}
+			} else
+                return true;
 		}
         return false;
 	}
