@@ -4,6 +4,8 @@ namespace OudyPlat;
 
 /**
  * Page class to load and handle page properties
+ *
+ * @author Ayoub Oudmane <ayoub at oudmane.me>
  */
 class Page extends Object {
     /**
@@ -20,12 +22,12 @@ class Page extends Object {
      * page task name
      * @var string
      */
-    public $task = '';
+    public $task;
     /**
      * page data
      * @var Object
      */
-    public $data = null;
+    public $data;
     /**
      * page title
      * @var string
@@ -92,27 +94,32 @@ class Page extends Object {
             
             // if it's a string
             case 'string':
-                
-                // convert it to URL
-                $page = new URL($page);
-                
             // if it's an URL
             case 'URL':
-                
-                // check if URL path exist in defined pages
-                if(isset(self::$pages[$page->path]))
-                    // load it
-                    parent::__construct(self::$pages[$page->path]);
-                
-                // check if the first element in URL path exist in defined pages
-                else if(isset(self::$pages[$page->paths[0]]))
-                    // load it
-                    parent::__construct(self::$pages[$page->paths[0]]);
-                
+                $this->load($page);
                 break;
             default:
                 parent::__construct($page);
                 break;
         }
+    }
+    public function load($page) {
+        if(gettype($page) == 'string')
+            // convert it to URL
+            $page = new URL($page);
+        // check if URL path exist in defined pages
+        if(isset(self::$pages[$page->path]))
+            // load it
+            parent::__construct(self::$pages[$page->path]);
+
+        // check if the first element in URL path exist in defined pages
+        else if(isset(self::$pages[$page->paths[0]]))
+            // load it
+            parent::__construct(self::$pages[$page->paths[0]]);
+        
+        else
+            return false;
+        
+        return true;
     }
 }
