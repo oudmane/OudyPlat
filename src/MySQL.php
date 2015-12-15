@@ -2,8 +2,11 @@
 
 namespace OudyPlat;
 
-use PDO;
-
+/**
+ * 
+ *
+ * @author Ayoub Oudmane <ayoub at oudmane.me>
+ */
 class MySQL {
     /**
      *
@@ -52,14 +55,14 @@ class MySQL {
      * @return array
      */
     public function fetch() {
-        return $this->statement->fetch(PDO::FETCH_ASSOC);
+        return $this->statement->fetch(\PDO::FETCH_ASSOC);
     }
     /**
      * fetch all rows
      * @return array
      */
     public function fetchAll() {
-        return $this->statement->fetchAll(PDO::FETCH_ASSOC);
+        return $this->statement->fetchAll(\PDO::FETCH_ASSOC);
     }
     /**
      * fetch the column from next row
@@ -75,7 +78,7 @@ class MySQL {
      * @return array
      */
     public function fetchAllColumn($column = 0) {
-        return $this->statement->fetchAll(PDO::FETCH_COLUMN, $column);
+        return $this->statement->fetchAll(\PDO::FETCH_COLUMN, $column);
     }
     /**
      * fetch nex row as $class
@@ -83,8 +86,8 @@ class MySQL {
      * @return $class
      */
     public function fetchClass($class) {
-        $this->statement->setFetchMode(PDO::FETCH_CLASS, $class);
-        return $this->statement->fetch(PDO::FETCH_CLASS);
+        $this->statement->setFetchMode(\PDO::FETCH_CLASS, $class);
+        return $this->statement->fetch(\PDO::FETCH_CLASS);
     }
     /**
      * fetch all rows as $class
@@ -92,7 +95,7 @@ class MySQL {
      * @return array
      */
     public function fetchAllClass($class) {
-        return $this->statement->fetchAll(PDO::FETCH_CLASS, $class);
+        return $this->statement->fetchAll(\PDO::FETCH_CLASS, $class);
     }
     /**
      * fetch next row as Object
@@ -130,7 +133,7 @@ class MySQL {
     public function foundRows() {
         return self::getConnection()
                 ->query('SELECT FOUND_ROWS();')
-                ->fetch(PDO::FETCH_COLUMN);
+                ->fetch(\PDO::FETCH_COLUMN);
     }
     /**
      * configure Database Connection
@@ -150,22 +153,22 @@ class MySQL {
     }
     /**
      * get the Connection with MySQL
-     * @return PDO
+     * @return \PDO
      */
     private static function getConnection() {
         if(is_null(self::$connection)) {
-            self::$connection = new PDO(
+            self::$connection = new \PDO(
                 'mysql:dbname='.self::$configuration->database.';host='.self::$configuration->host,
                 self::$configuration->username,
                 self::$configuration->password,
                 array(
-                    PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
-                    PDO::ATTR_PERSISTENT => TRUE
+                    \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+                    \PDO::ATTR_PERSISTENT => TRUE
                 )
             );
             self::$connection->setAttribute(
-                PDO::ATTR_ERRMODE,
-                PDO::ERRMODE_EXCEPTION
+                \PDO::ATTR_ERRMODE,
+                \PDO::ERRMODE_EXCEPTION
             );
         }
         
