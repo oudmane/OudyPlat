@@ -34,11 +34,14 @@ class Application extends Object {
      */
     public function load($page) {
         $data =& $page->data;
-        
+        $return = false;
         if(file_exists($controller = COMPONENTS_PATH.'system'.DIRECTORY_SEPARATOR.'controller.php'))
-            include $controller;
+            $return = include($controller);
         else if(defined('PARENT_COMPONENTS_PATH') && file_exists($controller = PARENT_COMPONENTS_PATH.'system'.DIRECTORY_SEPARATOR.'controller.php'))
-                include $controller;
+                $return = include($controller);
+        
+        if(!$return)
+            return false;
         
         if($page) {
             $notyet = false;
@@ -56,8 +59,12 @@ class Application extends Object {
                 return $this->error(2500);
         }
         $this->page = $page;
+        return false;
     }
     public function render($position, $module = null) {
+        if(is_null($this->page))
+            $this->error(2503);
+        
         $data =& $this->page->data;
         switch($position) {
             case 'api':
@@ -88,10 +95,10 @@ class Application extends Object {
             'task'=> $task,
             'data'=> $data
         ));
-        $this->load($page);
+        return $this->load($page);
     }
     public function error($code) {
-        $this->loadByComponent('error', $code);
+        return $this->loadByComponent('error', $code);
     }
     public function loadByURI($uri = null) {
         if(is_null($uri))
@@ -99,9 +106,23 @@ class Application extends Object {
         
         $page = new Page();
         if($page->load($uri))
-            $this->load($page);
+            return $this->load($page);
         else
-            $this->error(404);
+            return $this->error(404);
+    }
+    public function loadByComponentURI($uri = null) {
+        if(is_null($uri))
+            $uri = $_SERVER['REQUEST_URI'];
+        
+        $page = new Page();
+        $uri = new URL($uri);
+        if($uri->paths) {
+            $page->component = $uri->paths[0];
+            if(count($uri->paths) > 1)
+                $page->task = $uri->paths[1];
+            return $this->load($page);
+        } else
+            return $this->error(404);
     }
     public function setHeader($header) {
         $http = array (
