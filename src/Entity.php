@@ -2,6 +2,11 @@
 
 namespace OudyPlat;
 
+/**
+ * 
+ *
+ * @author Ayoub Oudmane <ayoub at oudmane.me>
+ */
 class Entity extends Object {
     const columns = '';
     const table = '';

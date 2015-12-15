@@ -2,6 +2,11 @@
 
 namespace OudyPlat;
 
+/**
+ * 
+ *
+ * @author Ayoub Oudmane <ayoub at oudmane.me>
+ */
 class MongoDB {
     private static function getConnection() {
         if(is_null(self::$connection))
