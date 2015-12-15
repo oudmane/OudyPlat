@@ -111,12 +111,12 @@ class Page extends Object {
         // check if URL path exist in defined pages
         if(isset(self::$pages[$page->path]))
             // load it
-            parent::__construct(self::$pages[$page->path]);
+            $this->__construct(self::$pages[$page->path]);
 
         // check if the first element in URL path exist in defined pages
-        else if(isset(self::$pages[$page->paths[0]]))
+        else if(isset(self::$pages['/'.$page->paths[0]]))
             // load it
-            parent::__construct(self::$pages[$page->paths[0]]);
+            $this->__construct(self::$pages['/'.$page->paths[0]]);
         
         else
             return false;
