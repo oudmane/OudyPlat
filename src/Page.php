@@ -89,6 +89,7 @@ class Page extends Object {
      * @param type string|URL|Page|
      */
     public function __construct($page = null) {
+        $this->data = new Object();
         // switch on $page type
         switch (gettype($page)) {
             
