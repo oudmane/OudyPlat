@@ -25,7 +25,10 @@ class Application extends Object {
         $this->exec = microtime();
         self::check();
         if(Session::$configuration)
-            $this->session = new Session();
+            if(isset(Session::$configuration->class))
+                $this->session = new Session::$configuration->class();
+            else
+                $this->session = new Session();
         $this->exec = microtime() - $this->exec;
     }
     /**
