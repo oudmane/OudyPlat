@@ -2,6 +2,11 @@
 
 namespace OudyPlat;
 
+/**
+ * 
+ *
+ * @author Ayoub Oudmane <ayoub at oudmane.me>
+ */
 class SQL {
     /**
      * Generate SELECT query
