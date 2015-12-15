@@ -2,6 +2,11 @@
 
 namespace OudyPlat;
 
+/**
+ * 
+ *
+ * @author Ayoub Oudmane <ayoub at oudmane.me>
+ */
 class Object {
     
     /**
@@ -88,5 +93,8 @@ class Object {
 	 */
 	public function __toString() {
 		return json_encode($this);
+	}
+    public function returnObject($allowedProperties) {
+		return new Object($this, $allowedProperties);
 	}
 }
