@@ -46,22 +46,25 @@ class Application extends Object {
         if($page) {
             $notyet = false;
             if(file_exists($controller = COMPONENTS_PATH.$page->component.DIRECTORY_SEPARATOR.'controller.php'))
-                include $controller;
+                $return = include($controller);
             else if(defined('PARENT_COMPONENTS_PATH') && file_exists($controller = PARENT_COMPONENTS_PATH.$page->component.DIRECTORY_SEPARATOR.'controller.php'))
-                    include $controller;
+                $return = include($controller);
             else
                 $notyet = true;
             if(file_exists($controller = COMPONENTS_PATH.$page->component.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.$page->task.'.php'))
-                include $controller;
+                $return = include($controller);
             else if(defined('PARENT_COMPONENTS_PATH') && file_exists($controller = PARENT_COMPONENTS_PATH.$page->component.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.$page->task.'.php'))
-                    include $controller;
+                $return = include($controller);
             else if($notyet)
                 return $this->error(2500);
+            
+            if(!$return)
+                return false;
         }
         $this->page = $page;
         return false;
     }
-    public function render($position, $module = null) {
+    public function render($position = null, $module = null) {
         if(is_null($this->page))
             $this->error(2503);
         
@@ -85,6 +88,13 @@ class Application extends Object {
                 }
                 $this->setHeader('json');
                 echo json_encode($data, JSON_PRETTY_PRINT);
+                break;
+            case 'html':
+                
+                break;
+            default:
+                $this->setHeader('json');
+                echo json_encode($this, JSON_PRETTY_PRINT);
                 break;
         }
         $this->setHeader('oudyplat');
