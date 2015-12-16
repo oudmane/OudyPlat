@@ -123,4 +123,7 @@ class Page extends Object {
         
         return true;
     }
+    public function getClass($position) {
+        return '';
+    }
 }
