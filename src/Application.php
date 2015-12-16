@@ -93,7 +93,8 @@ class Application extends Object {
                 echo json_encode($data, JSON_PRETTY_PRINT);
                 break;
             case 'html':
-                
+                $page =& $this->page;
+                include ROOT_PATH.'templates/wetud/layouts/html.php';
                 break;
             default:
                 $this->setHeader('json');
