@@ -77,7 +77,7 @@ class Page extends Object {
      * page Classes
      * @var array
      */
-    private $classes = array();
+    public $classes = null;
     /**
      * to store defined pages
      * @var object
@@ -90,6 +90,7 @@ class Page extends Object {
      */
     public function __construct($page = null) {
         $this->data = new Object();
+        $this->classes = new Object();
         // switch on $page type
         switch (gettype($page)) {
             
@@ -123,7 +124,22 @@ class Page extends Object {
         
         return true;
     }
-    public function getClass($position) {
-        return '';
+    public function setClass() {
+        $args = func_get_args();
+        if(!isset($this->classes->$args[0]))
+            $this->classes->$args[0] = new Object();
+        if(!isset($this->classes->$args[0]->set))
+            $this->classes->$args[0]->set = array();
+        for($i=1; $i<count($args); $i++)
+            array_push ($this->classes->$args[0]->set, $args[$i]);
+    }
+    public function addClass() {
+        $args = func_get_args();
+        if(!isset($this->classes->$args[0]))
+            $this->classes->$args[0] = new Object();
+        if(!isset($this->classes->$args[0]->add))
+            $this->classes->$args[0]->add = array();
+        for($i=1; $i<count($args); $i++)
+            array_push ($this->classes->$args[0]->add, $args[$i]);
     }
 }
