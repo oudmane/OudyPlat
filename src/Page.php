@@ -70,12 +70,12 @@ class Page extends Object {
     public $opengraph = array();
     /**
      * page Modules
-     * @var array
+     * @var Object
      */
-    private $modules = array();
+    public $modules = null;
     /**
      * page Classes
-     * @var array
+     * @var Object
      */
     public $classes = null;
     /**
@@ -91,6 +91,7 @@ class Page extends Object {
     public function __construct($page = null) {
         $this->data = new Object();
         $this->classes = new Object();
+        $this->modules = new Object();
         // switch on $page type
         switch (gettype($page)) {
             
@@ -141,5 +142,13 @@ class Page extends Object {
             $this->classes->$args[0]->add = array();
         for($i=1; $i<count($args); $i++)
             array_push ($this->classes->$args[0]->add, $args[$i]);
+    }
+    public function addModule($position, $module) {
+        if(!isset($this->modules->$position))
+            $this->modules->$position = array();
+        $this->modules->{$position}[] = $module;
+    }
+    public function preTitle($title) {
+        $this->title = $title.' - '.$this->title;
     }
 }
