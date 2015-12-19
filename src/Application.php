@@ -101,8 +101,26 @@ class Application extends Object {
                 include ROOT_PATH.'templates/wetud/layouts/html.php';
                 break;
             case 'module':
+                $page =& $this->page;
+                if(isset($page->modules->$module))
+                    foreach($page->modules->$module as $m)
+                        if(file_exists($module = MODULES_PATH.$m.'.php'))
+                            include $module;
+                        else if(defined('PARENT_COMPONENTS_PATH') && file_exists($module = PARENT_COMPONENTS_PATH.$m.'.php'))
+                            include $module;
+                break;
             case 'view':
-                
+                $notyet = false;
+                if(file_exists($view = COMPONENTS_PATH.$this->page->component.DIRECTORY_SEPARATOR.'view.php'))
+                    include $view;
+                else if(defined('PARENT_COMPONENTS_PATH') && file_exists($view = PARENT_COMPONENTS_PATH.$this->page->component.DIRECTORY_SEPARATOR.'view.php'))
+                    include $view;
+                else
+                    $notyet = true;
+                if(file_exists($view = COMPONENTS_PATH.$this->page->component.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.$this->page->task.'.php'))
+                    include $view;
+                else if(defined('PARENT_COMPONENTS_PATH') && file_exists($view = PARENT_COMPONENTS_PATH.$this->page->component.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.$this->page->task.'.php'))
+                    include $view;
                 break;
             default:
                 $this->setHeader('json');
@@ -312,5 +330,7 @@ class Application extends Object {
             define('COMPONENTS_PATH', ROOT_PATH.'components'.DIRECTORY_SEPARATOR);
         if(!defined('TEMPLATES_PATH'))
             define('TEMPLATES_PATH', ROOT_PATH.'templates'.DIRECTORY_SEPARATOR);
+        if(!defined('MODULES_PATH'))
+            define('MODULES_PATH', ROOT_PATH.'modules'.DIRECTORY_SEPARATOR);
     }
 }
