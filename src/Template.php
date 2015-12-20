@@ -32,8 +32,12 @@ class Template extends Object {
         foreach ($classes as $position => $classes) {
             if(isset($classes->set))
                 $this->classes->$position = $classes->set;
+            if(!isset($this->classes->$position))
+                $this->classes->$position = array();
             if(isset($classes->add))
                 $this->classes->$position = array_unique(array_merge($this->classes->$position, $classes->add));
+            if(isset($classes->remove))
+                $this->classes->$position = array_diff($this->classes->$position, $classes->remove);
         }
     }
     public function getClass($position) {
