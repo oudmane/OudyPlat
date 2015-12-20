@@ -132,7 +132,7 @@ class Page extends Object {
         if(!isset($this->classes->$args[0]->set))
             $this->classes->$args[0]->set = array();
         for($i=1; $i<count($args); $i++)
-            array_push ($this->classes->$args[0]->set, $args[$i]);
+            array_push($this->classes->$args[0]->set, $args[$i]);
     }
     public function addClass() {
         $args = func_get_args();
@@ -141,12 +141,29 @@ class Page extends Object {
         if(!isset($this->classes->$args[0]->add))
             $this->classes->$args[0]->add = array();
         for($i=1; $i<count($args); $i++)
-            array_push ($this->classes->$args[0]->add, $args[$i]);
+            array_push($this->classes->$args[0]->add, $args[$i]);
+    }
+    public function removeClass() {
+        $args = func_get_args();
+        if(!isset($this->classes->$args[0]))
+            $this->classes->$args[0] = new Object();
+        if(!isset($this->classes->$args[0]->remove))
+            $this->classes->$args[0]->remove = array();
+        for($i=1; $i<count($args); $i++)
+            array_push($this->classes->$args[0]->remove, $args[$i]);
     }
     public function addModule($position, $module) {
         if(!isset($this->modules->$position))
             $this->modules->$position = array();
         $this->modules->{$position}[] = $module;
+    }
+    public function removeModule($position, $module) {
+        if(isset($this->modules->$position)) {
+            if(($i = array_search($module, $this->modules->{$position})) !== false)
+                unset($this->modules->{$position}[$i]);
+            if(!$this->modules->{$position})
+                unset($this->modules->{$position});
+        }
     }
     public function preTitle($title) {
         $this->title = $title.' - '.$this->title;
