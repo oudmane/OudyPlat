@@ -19,6 +19,11 @@ class Application extends Object {
      * @var Session
      */
     public $session = null;
+    /**
+     *
+     * @var Language
+     */
+    public $language = null;
     public $exec = 0;
 
     public function __construct() {
@@ -29,6 +34,8 @@ class Application extends Object {
                 $this->session = new Session::$configuration->class();
             else
                 $this->session = new Session();
+        if(Language::$language)
+            $this->language = new Language(Language::$language);
         $this->exec = microtime() - $this->exec;
     }
     /**
@@ -37,6 +44,7 @@ class Application extends Object {
      */
     public function load($page) {
         $data =& $page->data;
+        $language =& $this->language;
         $return = false;
         if(file_exists($controller = COMPONENTS_PATH.'system'.DIRECTORY_SEPARATOR.'controller.php'))
             $return = include($controller);
@@ -72,7 +80,7 @@ class Application extends Object {
             $this->error(2503);
         
         $data =& $this->page->data;
-//        $this->setHeader('oudyplat');
+        $language =& $this->language;
         switch($position) {
             case 'api':
                 $notyet = false;
