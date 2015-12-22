@@ -99,7 +99,10 @@ class SQL {
 	}
 	public static function buildValues($object, $columns) {
 		$return = array();
-		if(gettype($columns)=='string') $columns = explode(',', $columns);
+		if(gettype($columns)=='string')
+            $columns = explode(',', $columns);
+		if(gettype($object)=='array')
+            $object = new Object($object);
 		foreach($columns as $column) {
 			switch(gettype($object->$column)) {
 				case 'array':
