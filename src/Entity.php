@@ -34,6 +34,15 @@ class Entity extends Object {
 			}
         }
     }
+    public function save($forceSave = false) {
+        if(empty($this->changes))
+            return false;
+        $class = get_class($this);
+        $key = $class::key;
+        if($this->$key && !$forceSave) {
+            
+        }
+    }
     public function load($key) {
         if(empty($key))
             return false;
@@ -70,6 +79,7 @@ class Entity extends Object {
 			$this->change($key);
 		}
 		$this->__construct();
+        return !$this->error();
     }
 	public function change($key) {
 		if(in_array($key, $this->changes)) return false;
