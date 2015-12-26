@@ -40,8 +40,24 @@ class Entity extends Object {
         $class = get_class($this);
         $key = $class::key;
         if($this->$key && !$forceSave) {
-            
+            $query = SQL::update(array(
+                'columns'=>     $this->changes,
+                'table'=>       $class::table,
+                'condition'=>   $key.' = :'.$key
+            ));
+            $values = SQL::buildValues($this, $this->changes);
+            $values[':'.$key] = $this->$key;
+        } else {
+            $query = SQL::insert(array(
+                'columns'=>     $class::columns,
+                'table'=>       $class::table
+            ));
+            $values = SQL::buildValues($this, $class::columns);
         }
+        $statemen = new MySQL($query, $values);
+        if(!$this->$key)
+            $this->$key = $statement->lastid();
+        return true;
     }
     public function load($key) {
         if(empty($key))
