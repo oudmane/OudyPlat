@@ -45,13 +45,13 @@ class Application extends Object {
     public function load($page) {
         $data =& $page->data;
         $language =& $this->language;
-        $return = false;
+        $return = 2;
         if(file_exists($controller = COMPONENTS_PATH.'system'.DIRECTORY_SEPARATOR.'controller.php'))
             $return = include($controller);
         else if(defined('PARENT_COMPONENTS_PATH') && file_exists($controller = PARENT_COMPONENTS_PATH.'system'.DIRECTORY_SEPARATOR.'controller.php'))
                 $return = include($controller);
         
-        if(!$return)
+        if($return !== 1)
             return false;
         
         if($page) {
@@ -69,7 +69,7 @@ class Application extends Object {
             else if($notyet)
                 return $this->error(2500);
             
-            if(!$return)
+            if($return !== 1)
                 return false;
         }
         $this->page = $page;
@@ -104,12 +104,17 @@ class Application extends Object {
             case 'html':
                 $page =& $this->page;
                 $template = new Template();
-                $template->mergeClasses($page->classes);
+                if(isset($page->classes))
+                	$template->mergeClasses($page->classes);
                 $this->setHeader('html');
-                include ROOT_PATH.'templates/wetud/layouts/html.php';
+				if(file_exists($html = ROOT_PATH.'templates/'.$template->name.'/layouts/html.php'))
+                	include $html;
                 break;
             case 'module':
                 $page =& $this->page;
+                $template = new Template();
+                if(isset($page->classes))
+                    $template->mergeClasses($page->classes);
                 if(isset($page->modules->$module))
                     foreach($page->modules->$module as $m)
                         if(file_exists($module = MODULES_PATH.$m.'.php'))
