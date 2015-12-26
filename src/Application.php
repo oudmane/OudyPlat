@@ -45,13 +45,13 @@ class Application extends Object {
     public function load($page) {
         $data =& $page->data;
         $language =& $this->language;
-        $return = null;
+        $return = 2;
         if(file_exists($controller = COMPONENTS_PATH.'system'.DIRECTORY_SEPARATOR.'controller.php'))
             $return = include($controller);
         else if(defined('PARENT_COMPONENTS_PATH') && file_exists($controller = PARENT_COMPONENTS_PATH.'system'.DIRECTORY_SEPARATOR.'controller.php'))
                 $return = include($controller);
         
-        if($return !== null)
+        if($return !== 1)
             return false;
         
         if($page) {
@@ -69,7 +69,7 @@ class Application extends Object {
             else if($notyet)
                 return $this->error(2500);
             
-            if(!$return)
+            if($return !== 1)
                 return false;
         }
         $this->page = $page;
