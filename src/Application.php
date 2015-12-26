@@ -112,6 +112,9 @@ class Application extends Object {
                 break;
             case 'module':
                 $page =& $this->page;
+                $template = new Template();
+                if(isset($page->classes))
+                    $template->mergeClasses($page->classes);
                 if(isset($page->modules->$module))
                     foreach($page->modules->$module as $m)
                         if(file_exists($module = MODULES_PATH.$m.'.php'))
