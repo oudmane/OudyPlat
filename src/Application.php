@@ -45,7 +45,9 @@ class Application extends Object {
     public function load($page) {
         $data =& $page->data;
         $language =& $this->language;
-        $return = 2;
+        if($this->session)
+            $session =& $this->session;
+        $return;
         if(file_exists($controller = COMPONENTS_PATH.'system'.DIRECTORY_SEPARATOR.'controller.php'))
             $return = include($controller);
         else if(defined('PARENT_COMPONENTS_PATH') && file_exists($controller = PARENT_COMPONENTS_PATH.'system'.DIRECTORY_SEPARATOR.'controller.php'))
