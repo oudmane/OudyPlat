@@ -54,14 +54,15 @@ class Entity extends Object {
             ));
             $values = SQL::buildValues($this, $class::columns);
         }
-        $statemen = new MySQL($query, $values);
+        $statement = new MySQL($query, $values);
         if(!$this->$key)
-            $this->$key = $statement->lastid();
+            $this->$key = $statement->lastInsertId();
         return true;
     }
     public function load($key) {
         if(empty($key))
             return false;
+        $class = get_class($this);
         $this->loadBy(array(
             $class::key=> $key
         ));
