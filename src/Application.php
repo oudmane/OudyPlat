@@ -83,6 +83,8 @@ class Application extends Object {
         
         $data =& $this->page->data;
         $language =& $this->language;
+        if($this->session)
+            $session =& $this->session;
         switch($position) {
             case 'api':
                 $notyet = false;
