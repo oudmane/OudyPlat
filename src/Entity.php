@@ -63,7 +63,7 @@ class Entity extends Object {
         if(empty($key))
             return false;
         $class = get_class($this);
-        $this->loadBy(array(
+        return $this->loadBy(array(
             $class::key=> $key
         ));
     }
