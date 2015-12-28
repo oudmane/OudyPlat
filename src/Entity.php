@@ -128,4 +128,17 @@ class Entity extends Object {
             $values
         )->fetchAllClass($class);
     }
+    public static function exist($key) {
+        $class = get_called_class();
+        return MySQL::select(
+            array(
+                'columns'=> $class::columns,
+                'table'=> $class::table,
+                'condition'=> $class::key.' = :'.$class::key
+            ),
+            array(
+                ':'.$class::key => $key
+            )
+        )->fetch() ? true : false;
+    }
 }
