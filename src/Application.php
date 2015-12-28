@@ -228,6 +228,11 @@ class Application extends Object {
         );
         header($http[$header]);
     }
+    public function redirect($link, $code = 302, $return = '') {
+        $this->setHeader($code);
+        header('Location: '.$link);
+        die;
+    }
     public function sanitaze() {
         ob_start(function($input) {
             if(trim($input) === "") return $input;
