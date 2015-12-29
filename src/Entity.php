@@ -129,16 +129,22 @@ class Entity extends Object {
         )->fetchAllClass($class);
     }
     public static function exist($key) {
+        $keys = array();
+        if(gettype($key) == 'array')
+            for($i=0; $i<count($key); $i++)
+                $keys[':key'.$i] = $key[$i];
+        else
+            $keys[':key'] = $key;
         $class = get_called_class();
         return MySQL::select(
             array(
-                'columns'=> $class::columns,
+                'columns'=> $class::key,
                 'table'=> $class::table,
-                'condition'=> $class::key.' = :'.$class::key
+                'condition'=> $class::key.' IN('.
+                    implode(',', array_keys($keys)).
+                ')'
             ),
-            array(
-                ':'.$class::key => $key
-            )
-        )->fetch() ? true : false;
+            $keys
+        )->fetchAllColumn();
     }
 }
