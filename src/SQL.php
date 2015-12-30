@@ -31,6 +31,8 @@ class SQL {
             $sql[] = 'ORDER BY '.$query['orderBy'];
         if(isset($query['limit']))
             $sql[] = 'LIMIT '.$query['limit'];
+        if(isset($query['offset']))
+            $sql[] = 'OFFSET '.$query['offset'];
         
         return implode("\n", $sql);
     }
