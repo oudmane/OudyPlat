@@ -139,6 +139,34 @@ class Application extends Object {
                 else if(defined('PARENT_COMPONENTS_PATH') && file_exists($view = PARENT_COMPONENTS_PATH.$this->page->component.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.$this->page->task.'.php'))
                     include $view;
                 break;
+            case 'oudyjs':
+                $page =& $this->page;
+                $template = new Template();
+                if(isset($page->classes))
+                    $template->mergeClasses($page->classes);
+                
+                $return = new Object();
+                $return->component = $page->component;
+                if($page->task)
+                    $return->task = $page->task;
+                if($page->title)
+                    $return->title = $page->title;
+                $return->classes = $template->classes;
+                $return->html = new Object();
+                foreach($template->positions as $position) {
+                    ob_start();
+                    $this->render('module', $position);
+                    $return->html->$position = ob_get_contents();
+                    ob_end_clean();
+                }
+                ob_start();
+                $this->render('view');
+                $return->html->view = ob_get_contents();
+                ob_end_clean();
+                
+                $this->setHeader('json');
+                echo json_encode($return, JSON_PRETTY_PRINT);
+                break;
             default:
                 $this->setHeader('json');
                 echo json_encode($this, JSON_PRETTY_PRINT);
