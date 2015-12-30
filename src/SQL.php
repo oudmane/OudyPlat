@@ -16,7 +16,7 @@ class SQL {
     public static function select($query) {
         $sql = array();
         
-        $sql[] = 'SELECT '.self::toString($query['columns']);
+        $sql[] = 'SELECT '.(isset($query['count']) ? 'SQL_CALC_FOUND_ROWS ' : '').self::toString($query['columns']);
         $sql[] = 'FROM '.$query['table'];
         if(isset($query['condition']))
             $sql[] = 'WHERE '.$query['condition'];
