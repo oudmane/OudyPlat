@@ -30,7 +30,7 @@ class Entity extends Object {
             $types = explode(';', $class::types);
             foreach($types as $type) {
 				list($key, $value) = explode(':', $type);
-				$this->$key = is_array($this->$key) ? $value::get($this->$key) : new $value($this->$key);
+				$this->$key = new $value($this->$key);
 			}
         }
     }
