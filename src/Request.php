@@ -72,6 +72,15 @@ class Request {
         } else
             return false;
     }
+    public static function issetFile($key) {
+        return isset($_FILES[$key]);
+    }
+    public static function getFile($key) {
+        if(self::issetFile($key)) {
+            return $_FILES[$key];
+        } else
+            return false;
+    }
     public static function issetPath($key) {
         if(is_null(self::$url))
             self::$url = new URL($_SERVER['REQUEST_URI']);
