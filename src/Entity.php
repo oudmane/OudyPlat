@@ -117,6 +117,17 @@ class Entity extends Object {
 			return count($this->errors) ? $this->errors : false;
 		}
 	}
+    public function remove() {
+        $class = get_class($this);
+        $key = $class::key;
+        MySQL::delete(
+            array(
+                'table'=> $class::table,
+                'condition'=> $key.' = :key'
+            ),
+            array(':key'=> $this->$key)
+        );
+    }
     public static function get($conditions, $values = null) {
         $class = get_called_class();
         return MySQL::select(
