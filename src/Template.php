@@ -37,7 +37,7 @@ class Template extends Object {
             if(isset($classes->add))
                 $this->classes->$position = array_unique(array_merge($this->classes->$position, $classes->add));
             if(isset($classes->remove))
-                $this->classes->$position = array_diff($this->classes->$position, $classes->remove);
+                $this->classes->$position = array_values(array_diff($this->classes->$position, $classes->remove));
         }
     }
     public function getClass($position) {
