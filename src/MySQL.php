@@ -163,7 +163,7 @@ class MySQL {
                 self::$configuration->password,
                 array(
                     \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
-                    \PDO::ATTR_PERSISTENT => TRUE
+                    \PDO::ATTR_PERSISTENT => FALSE
                 )
             );
             self::$connection->setAttribute(
