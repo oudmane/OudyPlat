@@ -100,4 +100,10 @@ class Object {
     public function encode($key) {
         return htmlspecialchars($this->$key, ENT_QUOTES, 'UTF-8');
     }
+    public static function returnKey($objects, $key) {
+        $array = array();
+        foreach($objects as $object)
+            array_push($array, $object->$key);
+        return $array;
+    }
 }
