@@ -97,4 +97,7 @@ class Object {
     public function returnObject($allowedProperties) {
 		return new Object($this, $allowedProperties);
 	}
+    public function encode($key) {
+        return htmlspecialchars($this->$key, ENT_QUOTES, 'UTF-8');
+    }
 }
