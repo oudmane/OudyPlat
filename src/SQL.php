@@ -70,7 +70,7 @@ class SQL {
             $set = array();
             $sql[] = 'ON DUPLICATE KEY UPDATE';
             foreach($columns as $column)
-                if($column != $query['key'])
+                if(!in_array($column, $query['key']))
                     $set[] = "\t".$column.' = :'.$column;
             $sql[] = implode(",\n", $set);
         }
