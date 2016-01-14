@@ -111,7 +111,7 @@ class Application extends Object {
                 if(isset($page->classes))
                 	$template->mergeClasses($page->classes);
                 $this->setHeader('html');
-				if(file_exists($html = ROOT_PATH.'templates/'.$template->name.'/layouts/html.php'))
+				if(file_exists($html = TEMPLATES_PATH.$template->name.'/layouts/html.php'))
                 	include $html;
                 break;
             case 'module':
@@ -123,7 +123,7 @@ class Application extends Object {
                     foreach($page->modules->$module as $m)
                         if(file_exists($module = MODULES_PATH.$m.'.php'))
                             include $module;
-                        else if(defined('PARENT_COMPONENTS_PATH') && file_exists($module = PARENT_COMPONENTS_PATH.$m.'.php'))
+                        else if(defined('PARENT_MODULES_PATH') && file_exists($module = PARENT_MODULES_PATH.$m.'.php'))
                             include $module;
                 break;
             case 'view':
