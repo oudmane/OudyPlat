@@ -168,4 +168,36 @@ class Page extends Object {
     public function preTitle($title) {
         $this->title = $title.' - '.$this->title;
     }
+    /**
+     * Set Metadata
+     * @param string $property
+     * @param string $content
+     */
+    public function setMeta($property, $content, $update = false) {
+        $meta = new Object(
+            array(
+                'property'=>$property,
+                'content'=>$content
+            )
+        );
+        if($update) {
+            $found = false;
+            for ($i=0; $i < count($this->metadata); $i++)
+                if($this->metadata[$i]->property == $meta->property) {
+                    $this->metadata[$i] = $meta;
+                    $found = true;
+                }
+            if(!$found)
+                $this->metadata[] = $meta;
+        } else
+            $this->metadata[] = $meta; 
+    }
+    /**
+     * Set OpenGraph metadata
+     * @param string $property
+     * @param string $content
+     */
+    public function setOG($property, $content, $update = false) {
+        $this->setMeta('og:'.$property, $content, $update);
+    }
 }
