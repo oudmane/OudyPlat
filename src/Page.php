@@ -168,6 +168,10 @@ class Page extends Object {
     public function preTitle($title) {
         $this->title = $title.' - '.$this->title;
     }
+    public function setDescription($description) {
+        $this->description = $description;
+        $this->setOG('description', $description);
+    }
     /**
      * Set Metadata
      * @param string $property
