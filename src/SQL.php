@@ -40,7 +40,7 @@ class SQL {
         $sql = array();
         $set = array();
         
-        $sql[] = 'UPDATE '.$query['table'];
+        $sql[] = 'UPDATE '.(isset($query['ignore']) ? 'IGNORE ' : '').$query['table'];
         $sql[] = 'SET';
         foreach(explode(',', self::toString($query['columns'])) as $column)
             $set[] = "\t".$column.' = :'.$column;
