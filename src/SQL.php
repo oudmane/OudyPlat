@@ -77,7 +77,7 @@ class SQL {
         
         return implode("\n", $sql);
     }
-    public function delete($query) {
+    public static function delete($query) {
         $sql = array();
         
         $sql[] = 'DELETE FROM '.$query['table'];
