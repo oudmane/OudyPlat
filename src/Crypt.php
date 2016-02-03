@@ -8,12 +8,12 @@ namespace OudyPlat;
  * @author Ayoub Oudmane <ayoub at oudmane.me>
  */
 class Crypt {
-	public static function genRandomPassword($length = 8, $full = true) {
-		if($full) {
-			$salt = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-		} else {
-			$salt = 'abcdefghijklmnopqrstuvwxyz0123456789';
-		}
+	public static function genRandomPassword($length = 8, $full = true, $salt = '') {
+		if(!$salt)
+            if($full)
+                $salt = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            else
+                $salt = 'abcdefghijklmnopqrstuvwxyz0123456789';
 		$base = strlen($salt);
 		$makepass = '';
 		$random = self::genRandomBytes($length + 1);
