@@ -151,7 +151,7 @@ class Application extends Object {
                     $return->task = $page->task;
                 if($page->title)
                     $return->title = $page->title;
-                $return->url = $page->canonical ? $page->canonical : $_SERVER['REQUEST_URI'];
+                $return->uri = $page->uri ? $page->uri : $_SERVER['REQUEST_URI'];
                 $return->classes = $template->classes;
                 $return->html = new Object();
                 foreach($template->positions as $position) {

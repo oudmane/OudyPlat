@@ -78,6 +78,7 @@ class Page extends Object {
      * @var Object
      */
     public $classes = null;
+    public $uri = '';
     /**
      * to store defined pages
      * @var object
