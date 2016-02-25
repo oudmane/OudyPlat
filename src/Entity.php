@@ -106,16 +106,14 @@ class Entity extends Object {
 	public function changed($key = '') {
 		return $key ? in_array($key, $this->changes) : $this->changes;
 	}
-	public function error($key = '', $error = '') {
-		if($key) {
-			if($error) {
-				$this->errors[$key] = $error;
-			} else {
+	public function error($key = '', $error = null) {
+		if($key)
+			if(is_null($error))
 				return isset($this->errors[$key]) ? $this->errors[$key] : false;
-			}
-		} else {
+			else
+                $this->errors[$key] = $error;
+		else
 			return count($this->errors) ? $this->errors : false;
-		}
 	}
     public function remove() {
         $class = get_class($this);
