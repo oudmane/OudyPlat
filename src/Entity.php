@@ -110,7 +110,9 @@ class Entity extends Object {
 		if($key)
 			if(is_null($error))
 				return isset($this->errors[$key]) ? $this->errors[$key] : false;
-			else
+			else if($error === false)
+                unset($this->errors[$key]);
+            else
                 $this->errors[$key] = $error;
 		else
 			return count($this->errors) ? $this->errors : false;
