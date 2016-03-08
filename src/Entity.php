@@ -21,7 +21,7 @@ class Entity extends Object {
                     break;
             }
         $class = get_class($this);
-        if(defined($class.'::types')) {
+        if(defined($class.'::types') && $class::types) {
             $types = explode(';', $class::types);
             foreach($types as $type) {
                 list($key, $value) = explode(':', $type);
