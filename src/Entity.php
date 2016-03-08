@@ -9,7 +9,13 @@ class Entity extends Object {
     const types = '';
     protected $changes = array();
     protected $errors = array();
-    public function __construct($data = null, $allowedProperties = null, $forceAll = null) {
+    /**
+     * 
+     * @param array|object|string $data
+     * @param array|object|string $allowedProperties
+     * @param bool $forceAll
+     */
+    public function __construct($data = null, $allowedProperties = null, $forceAll = false) {
         if($data)
             switch(gettype($data)) {
                 case 'array':
@@ -48,7 +54,7 @@ class Entity extends Object {
     }
     /**
      * 
-     * @param string $key, primary keys
+     * @param string|array $key, primary keys
      */
     public function loadByKey() {
         $args = func_get_args();
@@ -66,7 +72,7 @@ class Entity extends Object {
                 ' AND ',
                 array_map(
                     function($key) {
-                        return $key.'=:'.$key;
+                        return $key.' = :'.$key;
                     },
                     explode(',', $class::key)
                 )
@@ -85,8 +91,79 @@ class Entity extends Object {
             implode(
                 $all ? ' AND ' : ' OR ',
                 array_map(function($key) {
-                    return $key.'=:'.$key;
+                    return $key.' = :'.$key;
                 }, array_keys($conditions))
             ), SQL::buildValues($conditions, array_keys($conditions)));
+    }
+    /**
+     * 
+     * @param string $key
+     * @param string $error
+     */
+    public function setError($key, $error) {
+        $this->errors[$key] = $error;
+    }
+    /**
+     * 
+     * @param string $key
+     * @return string
+     */
+    public function getError($key) {
+        return isset($this->errors[$key]) ? $this->errors[$key] : false;
+    }
+    /**
+     * 
+     * @return boolean
+     */
+    public function hasErrors() {
+        return count($this->errors) ? true : false;
+    }
+    /**
+     * 
+     * @return array
+     */
+    public function getErrors() {
+        return $this->errors;
+    }
+    /**
+     * 
+     * @param string $key
+     * @param string $error
+     */
+    public function unsetError($key, $error = null) {
+        if(isset($this->errors[$key]))
+            if(is_null($error))
+                unset($this->errors[$key]);
+            else
+                if($this->errors[$key] == $error)
+                   unset($this->errors[$key]); 
+        
+    }
+    /**
+     * 
+     * @param string $key,
+     */
+    public function unsetErrors() {
+        $keys = func_get_args();
+        if(empty($keys))
+            $this->errors = array();
+        else
+            foreach($keys as $key)
+                $this->unsetError($key);
+    }
+    /**
+     * 
+     * @param array|object $data
+     * @param array|object|string $allowedProperties
+     * @param bool $forceAll
+     */
+    public function bind($data = null, $allowedProperties = null, $forceAll = false) {
+        $data = new Object($data, $allowedProperties, $forceAll);
+        foreach($data as $key=>$value) {
+            $this->$key = $value;
+            $this->change($key);
+        }
+        $this->__construct();
+        return !$this->error();
     }
 }

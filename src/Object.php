@@ -9,7 +9,7 @@ class Object {
      * @param array|object|string $allowedProperties
      * @param bool $forceAll
      */
-    public function __construct($data = null, $allowedProperties = null, $forceAll = null) {
+    public function __construct($data = null, $allowedProperties = null, $forceAll = false) {
         // stop if there's nothing to assing to this object
         if(empty($data))
             return;
