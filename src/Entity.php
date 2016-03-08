@@ -341,4 +341,35 @@ class Entity extends Object {
                 }, array_keys($conditions))
             ), SQL::buildValues($conditions, array_keys($conditions)));
     }
+    /**
+     * 
+     * @param string $conditions
+     * @param array $values
+     * @return array
+     */
+    public static function removeBySQLConditions($conditions, $values = array()) {
+        $class = get_called_class();
+        return MySQL::delete(array(
+            'table'=> $class::table,
+            'conditions'=> $conditions
+        ), $values);
+    }
+    /**
+     * 
+     * @param array $conditions
+     * @param boolean $all
+     * @return array
+     */
+    public function removeByConditions($conditions, $all = true) {
+        if(empty($conditions))
+            return false;
+        $class = get_called_class();
+        return $class::removeBySQLConditions(
+            implode(
+                $all ? ' AND ' : ' OR ',
+                array_map(function($key) {
+                    return $key.' = :'.$key;
+                }, array_keys($conditions))
+            ), SQL::buildValues($conditions, array_keys($conditions)));
+    }
 }
