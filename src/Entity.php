@@ -277,4 +277,36 @@ class Entity extends Object {
         else
             return null;
     }
+    /**
+     * 
+     * @param string $conditions
+     * @param array $values
+     * @return array
+     */
+    public static function getAllBySQLConditions($conditions, $values = array()) {
+        $class = get_called_class();
+        return MySQL::select(array(
+            'columns'=> $class::columns,
+            'table'=> $class::table,
+            'conditions'=> $conditions
+        ), $values)->fetchAllClass($class);
+    }
+    /**
+     * 
+     * @param array $conditions
+     * @param boolean $all
+     * @return array
+     */
+    public function getAllByConditions($conditions, $all = true) {
+        if(empty($conditions))
+            return false;
+        $class = get_called_class();
+        return $class::getAllBySQLConditions(
+            implode(
+                $all ? ' AND ' : ' OR ',
+                array_map(function($key) {
+                    return $key.' = :'.$key;
+                }, array_keys($conditions))
+            ), SQL::buildValues($conditions, array_keys($conditions)));
+    }
 }
