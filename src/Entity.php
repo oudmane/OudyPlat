@@ -146,6 +146,32 @@ class Entity extends Object {
             $this->$key = $statement->lastInsertId();
         return true;
     }
+    public function remove() {
+        $class = get_class($this);
+        $key = $class::key;
+        $conditions = '';
+        $values = array();
+        if(count($keys = explode(',', $key)) > 1) {
+            $conditions = implode(
+                ' AND ',
+                array_map(
+                    function($key) {
+                        return $key.' = :'.$key;
+                    },
+                    $keys
+                )
+            );
+            $values = SQL::buildValues($this, $keys);
+        } else {
+            $conditions = $key.' = :'.$key;
+            $values = array(':'.$key=> $this->$key);
+        }
+        MySQL::delete(array(
+            'table'=> $class::table,
+            'conditions'=> $conditions
+        ), $values);
+        return true;
+    }
     /**
      * 
      * @param string $key
