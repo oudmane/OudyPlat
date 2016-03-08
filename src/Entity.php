@@ -97,6 +97,24 @@ class Entity extends Object {
     }
     /**
      * 
+     * @param array|object $data
+     * @param array|object|string $allowedProperties
+     * @param bool $forceAll
+     */
+    public function bind($data = null, $allowedProperties = null, $forceAll = false) {
+        $data = new Object($data, $allowedProperties, $forceAll);
+        foreach($data as $key=>$value) {
+            $this->$key = $value;
+            $this->change($key);
+        }
+        $this->__construct();
+        return !$this->error();
+    }
+    public function save($forceInsert = false, $ignore = false) {
+        
+    }
+    /**
+     * 
      * @param string $key
      * @param string $error
      */
@@ -153,17 +171,36 @@ class Entity extends Object {
     }
     /**
      * 
-     * @param array|object $data
-     * @param array|object|string $allowedProperties
-     * @param bool $forceAll
+     * @param string $key
      */
-    public function bind($data = null, $allowedProperties = null, $forceAll = false) {
-        $data = new Object($data, $allowedProperties, $forceAll);
-        foreach($data as $key=>$value) {
-            $this->$key = $value;
-            $this->change($key);
-        }
-        $this->__construct();
-        return !$this->error();
+    public function setChange($key) {
+        if(!in_array($key, $this->changes))
+            array_push($this->changes, $key);
+    }
+    public function unsetChange($key) {
+        if(($index = array_search($key, $this->changes)) !== false)
+            array_splice($this->changes, $index, 1);
+    }
+    /**
+     * 
+     * @param string $key
+     * @return boolean
+     */
+    public function isChanged($key) {
+        return in_array($key, $this->changes);
+    }
+    /**
+     * 
+     * @return boolean
+     */
+    public function hasChanges() {
+        return count($this->changes) ? true : false;
+    }
+    /**
+     * 
+     * @return array
+     */
+    public function getChanges() {
+        return $this->changes;
     }
 }
