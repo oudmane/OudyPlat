@@ -11,6 +11,9 @@ class SQL {
     public static function select($query) {
         $sql = array();
         
+        if(isset($query['count']) && !$query['count'])
+            unset($query['count']);
+        
         $sql[] = 'SELECT '.(isset($query['count']) ? 'SQL_CALC_FOUND_ROWS ' : '').self::toString($query['columns']);
         $sql[] = 'FROM '.$query['table'];
         if(isset($query['conditions']))
@@ -35,6 +38,9 @@ class SQL {
         $sql = array();
         $set = array();
         
+        if(isset($query['ignore']) && !$query['ignore'])
+            unset($query['ignore']);
+        
         $sql[] = 'UPDATE '.(isset($query['ignore']) ? 'IGNORE ' : '').$query['table'];
         $sql[] = 'SET';
         foreach(explode(',', self::toString($query['columns'])) as $column)
@@ -50,6 +56,11 @@ class SQL {
         $columns = explode(',', self::toString($query['columns']));
         $sqlCollumns = array();
         $sqlValues = array();
+        
+        if(isset($query['ignore']) && !$query['ignore'])
+            unset($query['ignore']);
+        if(isset($query['update']) && !$query['update'])
+            unset($query['update']);
         
         $sql[] = 'INSERT '.(isset($query['ignore']) ? 'IGNORE ' : '').'INTO '.$query['table'].' (';
         foreach($columns as $column) {
