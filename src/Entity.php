@@ -105,13 +105,46 @@ class Entity extends Object {
         $data = new Object($data, $allowedProperties, $forceAll);
         foreach($data as $key=>$value) {
             $this->$key = $value;
-            $this->change($key);
+            $this->setChange($key);
         }
         $this->__construct();
-        return !$this->error();
+        return !$this->hasChanges();
     }
     public function save($forceInsert = false, $ignore = false) {
-        
+        if(!$this->hasChanges())
+            return false;
+        $class = get_class($this);
+        $key = $class::key;
+        $query = '';
+        $values = array();
+        if(count($keys = explode(',', $key)) > 1) {
+            $query = SQL::insert(array(
+                'columns'=> self::columns,
+                'table'=> self::table,
+                'key'=> $keys,
+                'update'=> true
+            ));
+            $values = SQL::buildValues($this, self::columns);
+        } else if($this->$key && !$forceInsert) {
+            $query = SQL::update(array(
+                'columns'=> $this->changes,
+                'table'=> $class::table,
+                'conditions'=> $key.' = :'.$key
+            ));
+            $values = SQL::buildValues($this, $this->changes);
+            $values[':'.$key] = $this->$key;
+        } else {
+            $query = SQL::insert(array(
+                'columns'=> $class::columns,
+                'table'=> $class::table,
+                'ignore'=> $ignore
+            ));
+            $values = SQL::buildValues($this, $class::columns);
+        }
+        $statement = new MySQL($query, $values);
+        if(count($keys) == 1 && !$this->$key)
+            $this->$key = $statement->lastInsertId();
+        return true;
     }
     /**
      * 
