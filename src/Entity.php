@@ -236,4 +236,45 @@ class Entity extends Object {
     public function getChanges() {
         return $this->changes;
     }
+    /**
+     * 
+     * @param string|array $key, primary keys
+     * @return \OudyPlat\Object
+     */
+    public static function getByKey() {
+        $class = get_called_class();
+        $object = new $class();
+        if($object->loadByKey(func_get_args()))
+            return $object;
+        else
+            return null;
+    }
+    /**
+     * 
+     * @param string $conditions
+     * @param array $values
+     * @return \OudyPlat\Object
+     */
+    public static function getBySQLConditions($conditions, $values = array()) {
+        $class = get_called_class();
+        $object = new $class();
+        if($object->loadBySQLConditions($conditions, $values))
+            return $object;
+        else
+            return null;
+    }
+    /**
+     * 
+     * @param array $conditions
+     * @param boolean $all
+     * @return \OudyPlat\Object
+     */
+    public static function getByConditions($conditions, $all = true) {
+        $class = get_called_class();
+        $object = new $class();
+        if($object->loadByConditions($conditions, $all))
+            return $object;
+        else
+            return null;
+    }
 }
