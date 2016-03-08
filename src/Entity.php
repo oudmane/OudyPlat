@@ -297,11 +297,43 @@ class Entity extends Object {
      * @param boolean $all
      * @return array
      */
-    public function getAllByConditions($conditions, $all = true) {
+    public static function getAllByConditions($conditions, $all = true) {
         if(empty($conditions))
             return false;
         $class = get_called_class();
         return $class::getAllBySQLConditions(
+            implode(
+                $all ? ' AND ' : ' OR ',
+                array_map(function($key) {
+                    return $key.' = :'.$key;
+                }, array_keys($conditions))
+            ), SQL::buildValues($conditions, array_keys($conditions)));
+    }
+    /**
+     * 
+     * @param string $conditions
+     * @param array $values
+     * @return array
+     */
+    public static function existWithSQLConditions($conditions, $values = array()) {
+        $class = get_called_class();
+        return MySQL::select(array(
+            'columns'=> $class::key,
+            'table'=> $class::table,
+            'conditions'=> $conditions
+        ), $values)->fetchAllColumn();
+    }
+    /**
+     * 
+     * @param array $conditions
+     * @param boolean $all
+     * @return array
+     */
+    public function existWithConditions($conditions, $all = true) {
+        if(empty($conditions))
+            return false;
+        $class = get_called_class();
+        return $class::existWithSQLConditions(
             implode(
                 $all ? ' AND ' : ' OR ',
                 array_map(function($key) {
