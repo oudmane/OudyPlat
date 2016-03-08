@@ -72,7 +72,7 @@ class Object {
      * @return string
      */
     public function __toString() {
-        return json_encode($this);
+        return json_encode($this, JSON_PRETTY_PRINT);
     }
     /**
      * return the object with some properties
