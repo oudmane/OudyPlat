@@ -19,7 +19,7 @@ class URL extends Object {
         if($this->query)
             parse_str($this->query, $this->queries);
         if($this->path)
-            $this->paths = array_slice(explode('/', $this->path), 1);
+            $this->paths = ($this->path == '/') ? array() : array_slice(explode('/', $this->path), 1);
     }
     public function loadCurrentURL() {
         $this->scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';

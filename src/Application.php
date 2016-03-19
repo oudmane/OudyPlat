@@ -19,9 +19,42 @@ class Application {
     /**
      * 
      * @param \OudyPlat\Page $page
+     * @return boolean
      */
     public function load($page) {
-        
+        $this->page = $page;
+    }
+    /**
+     * 
+     * @param string $component
+     * @param string $task
+     * @param array|object $data
+     * @return boolean
+     */
+    public function loadBy($component, $task = null, $data = null) {
+        return $this->load(new Page(array(
+            'component'=>   $component,
+            'task'=>        $task,
+            'data'=>        $data
+        )));
+    }
+    /**
+     * 
+     * @param int $code
+     * @param array|object $data
+     * @return boolean
+     */
+    public function error($code, $data = null) {
+        return $this->loadBy('error', $code, $data);
+    }
+    public function loadByPageURL($url = null) {
+        if(is_null($url)) {
+            $url = new URL();
+            $url->loadCurrentURL();
+        }
+        $page = new Page();
+        $page->loadByPageURL($url);
+        return $this->load($page);
     }
     /**
      * 

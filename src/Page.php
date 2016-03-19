@@ -18,4 +18,16 @@ class Page extends Object {
     public $url = null;
     public $template = null;
     public static $pages = null;
+    public function loadByPageURL($url) {
+        $this->url = clone $url;
+        if($url->paths) {
+            for($i = count($url->paths); $i > 0; $i--) {
+                if(isset(self::$pages[$path = '/'.implode('/', $url->paths)]))
+                    return $this->__construct(self::$pages[$path]);
+                else
+                    array_pop($url->paths);
+            }
+        } else if(isset(self::$pages['/']))
+            $this->__construct(self::$pages['/']);
+    }
 }
