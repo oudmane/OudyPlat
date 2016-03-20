@@ -13,8 +13,10 @@ class Application {
      * @var \OudyPlat\Session 
      */
     public $session = null;
+    public $template = null;
     public function __construct() {
         $this->session = ($handler = Session::getHandler()) ? new $handler() : new Session();
+        $this->template = new Template();
     }
     /**
      * 
@@ -22,7 +24,28 @@ class Application {
      * @return boolean
      */
     public function load($page) {
-        $this->page = $page;
+        $this->page = clone $page;
+        $data = $this->page->data;
+        $load = null;
+        if(file_exists($controller = COMPONENTS_PATH.'system/controller.php'))
+            $load = include($controller);
+        else if(defined('PARENT_COMPONENTS_PATH') && file_exists($controller = PARENT_COMPONENTS_PATH.'system/controller.php'))
+            $load = include($controller);
+        if($load !== 1)
+            return 0;
+        $notyet = false;
+        if(file_exists($controller = COMPONENTS_PATH.$page->component.'/controller.php'))
+            $load = include($controller);
+        else if(defined('PARENT_COMPONENTS_PATH') && file_exists($controller = PARENT_COMPONENTS_PATH.$page->component.'/controller.php'))
+            $load = include($controller);
+        else
+            $notyet = true;
+        if(file_exists($controller = COMPONENTS_PATH.$page->component.'/controllers/'.$page->task.'.php'))
+            $load = include($controller);
+        else if(defined('PARENT_COMPONENTS_PATH') && file_exists($controller = PARENT_COMPONENTS_PATH.$page->component.'/controllers/'.$page->task.'.php'))
+            $load = include($controller);
+        else if($notyet)
+            return $this->error(2500);
     }
     /**
      * 
@@ -44,7 +67,7 @@ class Application {
      * @param array|object $data
      * @return boolean
      */
-    public function error($code, $data = null) {
+    public function error($code = 404, $data = null) {
         return $this->loadBy('error', $code, $data);
     }
     public function loadByPageURL($url = null) {
@@ -107,5 +130,12 @@ class Application {
             'oudyplat' => 'X-Powered-By: OudyPlat 2.5'
         );
         header(isset($headers[$header]) ? $headers[$header] : $header);
+    }
+    public function render($module = 'html', $position = null) {
+        switch($module) {
+            case 'html':
+                
+                break;
+        }
     }
 }

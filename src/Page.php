@@ -18,6 +18,10 @@ class Page extends Object {
     public $url = null;
     public $template = null;
     public static $pages = null;
+    public function __construct($data = null, $allowedProperties = null, $forceAll = false) {
+        parent::__construct($data, $allowedProperties, $forceAll);
+        $this->data = new Object();
+    }
     public function loadByPageURL($url) {
         $this->url = clone $url;
         if($url->paths) {
