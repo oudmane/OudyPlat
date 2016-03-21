@@ -24,8 +24,9 @@ class Application {
      * @return boolean
      */
     public function load($page) {
-        $this->page = clone $page;
-        $data = $this->page->data;
+        $session = $this->session;
+        $page->template = $this->template->forPage($page);
+        $data = $page->data;
         $load = null;
         if(file_exists($controller = COMPONENTS_PATH.'system/controller.php'))
             $load = include($controller);
@@ -46,6 +47,7 @@ class Application {
             $load = include($controller);
         else if($notyet)
             return $this->error(2500);
+        $this->page = clone $page;
     }
     /**
      * 
@@ -131,10 +133,14 @@ class Application {
         );
         header(isset($headers[$header]) ? $headers[$header] : $header);
     }
-    public function render($module = 'html', $position = null) {
+    public function render($module = 'layout', $position = null) {
+        $session = $this->session;
+        $page = $this->page;
+        $data = $page->data;
+        $template = $page->template;
         switch($module) {
-            case 'html':
-                
+            case 'layout':
+                include TEMPLATES_PATH.$template->name.'/layout/'.$template->layout.'.php';
                 break;
         }
     }

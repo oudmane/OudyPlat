@@ -13,9 +13,12 @@ class Page extends Object {
     public $canonical = '';
     public $shortlink = '';
     public $metadata = array();
-    public $classes = array();
     public $modules = array();
     public $url = null;
+    /**
+     *
+     * @var \OudyPlat\Template
+     */
     public $template = null;
     public static $pages = null;
     public function __construct($data = null, $allowedProperties = null, $forceAll = false) {
@@ -33,5 +36,34 @@ class Page extends Object {
             }
         } else if(isset(self::$pages['/']))
             $this->__construct(self::$pages['/']);
+    }
+    public function setClass() {
+        $classes = func_get_args();
+        $position = array_shift($classes);
+        echo json_encode($classes);
+        $this->template->classes[$position] = $classes;
+    }
+    public function addClass() {
+        $classes = func_get_args();
+        $position = array_shift($classes);
+        if(!isset($this->template->classes[$position]))
+            $this->template->classes[$position] = $classes;
+        else
+            foreach($classes as $class)
+                if(!in_array ($class, $this->template->classes[$position]))
+                    array_push($this->template->classes[$position], $class);
+    }
+    public function removeClass() {
+        $classes = func_get_args();
+        $position = array_shift($classes);
+        if(isset($this->template->classes[$position]))
+            foreach($classes as $class)
+                if(($index = array_search($class, $this->template->classes[$position])) !== false)
+                    array_splice($this->template->classes[$position], $index, 1);
+    }
+    public function getClasses($position) {
+        if(isset($this->template->classes[$position]))
+            return implode(' ', $this->template->classes[$position]);
+        return '';
     }
 }
