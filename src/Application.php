@@ -142,6 +142,14 @@ class Application {
             case 'layout':
                 include TEMPLATES_PATH.$template->name.'/layout/'.$template->layout.'.php';
                 break;
+            case 'module':
+                if($modules = $page->getModules($position))
+                    foreach($modules as $module)
+                        if(file_exists($load = MODULES_PATH.$module.'.php'))
+                            include $load;
+                        else if(defined('PARENT_MODULES_PATH') && file_exists($load = PARENT_MODULES_PATH.$module.'.php'))
+                            include $load;
+                break;
         }
     }
     public function sanitaze() {

@@ -40,7 +40,6 @@ class Page extends Object {
     public function setClass() {
         $classes = func_get_args();
         $position = array_shift($classes);
-        echo json_encode($classes);
         $this->template->classes[$position] = $classes;
     }
     public function addClass() {
@@ -65,5 +64,33 @@ class Page extends Object {
         if(isset($this->template->classes[$position]))
             return implode(' ', $this->template->classes[$position]);
         return '';
+    }
+    public function setModule() {
+        $modules = func_get_args();
+        $position = array_shift($modules);
+        $this->modules[$position] = $modules;
+    }
+    public function addModule() {
+        $modules = func_get_args();
+        $position = array_shift($modules);
+        if(!isset($this->modules[$position]))
+            $this->modules[$position] = $modules;
+        else
+            foreach($modules as $class)
+                if(!in_array ($class, $this->modules[$position]))
+                    array_push($this->modules[$position], $class);
+    }
+    public function removeModule() {
+        $modules = func_get_args();
+        $position = array_shift($modules);
+        if(isset($this->modules[$position]))
+            foreach($modules as $class)
+                if(($index = array_search($class, $this->modules[$position])) !== false)
+                    array_splice($this->modules[$position], $index, 1);
+    }
+    public function getModules($position) {
+        if(isset($this->modules[$position]))
+            return $this->modules[$position];
+        return array();
     }
 }
