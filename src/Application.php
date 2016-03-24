@@ -150,7 +150,25 @@ class Application {
                         else if(defined('PARENT_MODULES_PATH') && file_exists($load = PARENT_MODULES_PATH.$module.'.php'))
                             include $load;
                 break;
+            case 'view':
+                $notyet = false;
+                if(file_exists($view = COMPONENTS_PATH.$page->component.'/view.php'))
+                    include $view;
+                else if(defined('PARENT_COMPONENTS_PATH') && file_exists($view = PARENT_COMPONENTS_PATH.$page->component.'/view.php'))
+                    include $view;
+                else
+                    $notyet = true;
+                if(file_exists($view = COMPONENTS_PATH.$page->component.'/views/'.$page->task.'.php'))
+                    include $view;
+                else if(defined('PARENT_COMPONENTS_PATH') && file_exists($view = PARENT_COMPONENTS_PATH.$page->component.'/views/'.$page->task.'.php'))
+                    include $view;
+                break;
         }
+    }
+    public function redirect($link, $code = 302) {
+        $this->setHeader($code);
+        header('Location: '.$link);
+        die;
     }
     public function sanitaze() {
         ob_start(function($input) {
