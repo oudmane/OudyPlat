@@ -14,9 +14,13 @@ class Application {
      */
     public $session = null;
     public $template = null;
+    public $request = null;
+    public $redirect = true;
+    public static $socket = false;
     public function __construct() {
         $this->session = ($handler = Session::getHandler()) ? new $handler() : new Session();
         $this->template = new Template();
+        $this->request = new Request();
     }
     /**
      * 
@@ -25,9 +29,17 @@ class Application {
      */
     public function load($page) {
         $session = $this->session;
+        $request = $this->request;
+        if(!self::$socket) {
+            $request->load('get', $_GET);
+            $request->load('post', $_POST);
+            $request->load('files', $_FILES);
+            $request->load('url', $page->url);
+        }
         $page->template = $this->template->forPage($page);
         $data = $page->data;
         $load = null;
+        $this->page = $page;
         if(file_exists($controller = COMPONENTS_PATH.'system/controller.php'))
             $load = include($controller);
         else if(defined('PARENT_COMPONENTS_PATH') && file_exists($controller = PARENT_COMPONENTS_PATH.'system/controller.php'))
@@ -47,7 +59,6 @@ class Application {
             $load = include($controller);
         else if($notyet)
             return $this->error(2500);
-        $this->page = clone $page;
     }
     /**
      * 
@@ -131,13 +142,15 @@ class Application {
             'xml' => 'Content-type: application/xml; charset=utf-8',
             'oudyplat' => 'X-Powered-By: OudyPlat 2.5'
         );
-        header(isset($headers[$header]) ? $headers[$header] : $header);
+        if(!self::$socket)
+            header(isset($headers[$header]) ? $headers[$header] : $header);
     }
     public function render($module = 'layout', $position = null) {
         $session = $this->session;
         $page = $this->page;
         $data = $page->data;
         $template = $page->template;
+        $request = $this->request;
         switch($module) {
             case 'layout':
                 include TEMPLATES_PATH.$template->name.'/layout/'.$template->layout.'.php';
@@ -151,6 +164,7 @@ class Application {
                             include $load;
                 break;
             case 'view':
+            case 'oudyview':
                 $notyet = false;
                 if(file_exists($view = COMPONENTS_PATH.$page->component.'/view.php'))
                     include $view;
@@ -163,12 +177,48 @@ class Application {
                 else if(defined('PARENT_COMPONENTS_PATH') && file_exists($view = PARENT_COMPONENTS_PATH.$page->component.'/views/'.$page->task.'.php'))
                     include $view;
                 break;
+            case 'api':
+                $this->setHeader('json');
+                $notyet = false;
+                if(file_exists($api = COMPONENTS_PATH.$page->component.'/api.php'))
+                    include $api;
+                else if(defined('PARENT_COMPONENTS_PATH') && file_exists($api = PARENT_COMPONENTS_PATH.$page->component.'/api.php'))
+                    include $api;
+                else
+                    $notyet = true;
+                if(file_exists($api = COMPONENTS_PATH.$page->component.'/apis/'.$page->task.'.php'))
+                    include $api;
+                else if(defined('PARENT_COMPONENTS_PATH') && file_exists($api = PARENT_COMPONENTS_PATH.$page->component.'/apis/'.$page->task.'.php'))
+                    include $api;
+                echo json_encode($data, JSON_PRETTY_PRINT);
+                break;
+            case 'oudyjs':
+                $render = $page->returnObject('component,task,title,url.(path,query),canonical,uri,template.(classes)');
+                $render->html = new Object();
+                foreach($template->positions as $position) {
+                    ob_start();
+                    $this->render('module', $position);
+                    $render->html->$position = ob_get_contents();
+                    ob_end_clean();
+                }
+                ob_start();
+                $this->render('view');
+                $render->html->view = ob_get_contents();
+                ob_end_clean();
+                $this->setHeader('json');
+                echo $render;
+                break;
         }
     }
     public function redirect($link, $code = 302) {
-        $this->setHeader($code);
-        header('Location: '.$link);
-        die;
+        if($this->redirect) {
+            $this->setHeader($code);
+            header('Location: '.$link);
+            die;
+        } else {
+            $url = new URL($link);
+            return $this->loadByPageURL($url);
+        }
     }
     public function sanitaze() {
         ob_start(function($input) {

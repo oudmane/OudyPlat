@@ -7,7 +7,7 @@ class MySQL {
      *
      * @var \PDO
      */
-    private static $connection = null;
+    private $connection = null;
     /**
      * Configuration
      * @var \OudyPlat\Object
@@ -35,8 +35,9 @@ class MySQL {
      * @return MySQL
      */
     public function prepare($query) {
+        $this->connection = self::getConnection();
         return
-            $this->statement = self::getConnection()->prepare($query);
+            $this->statement = $this->connection->prepare($query);
     }
     public function execute($values = array()) {
         if(empty($values))
@@ -118,17 +119,17 @@ class MySQL {
      * @return mixed
      */
     public function lastInsertId() {
-        return self::getConnection()
-                ->lastInsertId();
+        return $this->connection
+            ->lastInsertId();
     }
     /**
      * found rows count
      * @return int
      */
     public function foundRows() {
-        return self::getConnection()
-                ->query('SELECT FOUND_ROWS();')
-                ->fetch(\PDO::FETCH_COLUMN);
+        return $this->connection
+            ->query('SELECT FOUND_ROWS();')
+            ->fetch(\PDO::FETCH_COLUMN);
     }
     /**
      * configure Database Connection
@@ -151,22 +152,26 @@ class MySQL {
      * @return \PDO
      */
     private static function getConnection() {
-        if(is_null(self::$connection)) {
-            self::$connection = new \PDO(
+//        if(is_null(self::$connection)) {
+//            self::$connection =
+            $connection =
+                    new \PDO(
                 'mysql:dbname='.self::$configuration->database.';host='.self::$configuration->host,
                 self::$configuration->username,
                 self::$configuration->password,
                 array(
                     \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
-                    \PDO::ATTR_PERSISTENT => FALSE
+                    \PDO::ATTR_PERSISTENT => FALSE,
+                    \PDO::ATTR_TIMEOUT => 10
                 )
             );
-            self::$connection->setAttribute(
+            $connection->setAttribute(
                 \PDO::ATTR_ERRMODE,
                 \PDO::ERRMODE_EXCEPTION
             );
-        }
-        
+            return $connection;
+//        }
+//        echo self::$connection->getAttribute(\PDO::ATTR_CONNECTION_STATUS);
         return self::$connection;
     }
     /**

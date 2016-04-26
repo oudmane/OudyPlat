@@ -3,17 +3,26 @@
 namespace OudyPlat;
 
 class Request {
+    public $get = array();
+    public $post = array();
+    public $files = array();
     /**
      *
      * @var \OudyPlat\URL 
      */
-    public static $url = null;
-    public static function getBody() {
-        return file_get_contents('php://input');
+    public $url = array();
+    public function __construct() {
+        
     }
-    public static function getJSONBody() {
-        return json_decode(self::getBody());
+    public function load($param, $values) {
+        $this->$param = $values;
     }
+//    public static function getBody() {
+//        return file_get_contents('php://input');
+//    }
+//    public static function getJSONBody() {
+//        return json_decode(self::getBody());
+//    }
     public static function getCookie($name, $destroy = false) {
         if(!isset($_COOKIE[$name]))
             return null;
@@ -35,7 +44,7 @@ class Request {
     public static function issetParam($param, $from = array('POST', 'GET', 'PATH')) {
         foreach($from as $source) {
             $function = 'isset'.ucfirst(strtolower($source));
-            return self::$function($param);
+            return $this->$function($param);
         }
         return false;
     }
@@ -44,46 +53,48 @@ class Request {
             $function = 'isset'.ucfirst(strtolower($source));
             if(self::$function($param)) {
                 $function = 'get'.ucfirst(strtolower($source));
-                return self::$function($param);
+                return $this->$function($param);
             }
         }
         return false;
     }
-    public static function issetPost($key) {
-        return isset($_POST[$key]);
+    public function issetPost($key) {
+        return isset($this->post[$key]);
     }
-    public static function getPost($key) {
-        if(self::issetPost($key)) {
-            return $_POST[$key];
+    public function getPost($key) {
+        if($this->issetPost($key)) {
+            return $this->post[$key];
         } else
             return false;
     }
-    public static function issetGet($key) {
-        return isset($_GET[$key]);
+    public function issetGet($key) {
+        return isset($this->get[$key]);
     }
-    public static function getGet($key) {
-        if(self::issetGet($key)) {
-            return $_GET[$key];
+    public function getGet($key) {
+        if($this->issetGet($key)) {
+            return $this->get[$key];
         } else
             return false;
     }
-    public static function issetFile($key) {
-        return isset($_FILES[$key]);
+    public function issetFile($key) {
+        return isset($this->files[$key]);
     }
-    public static function getFile($key) {
-        if(self::issetFile($key)) {
-            return $_FILES[$key];
+    public function getFile($key) {
+        if($this->issetFile($key)) {
+            return $this->files[$key];
         } else
             return false;
     }
-    public static function issetPath($key) {
-        if(is_null(self::$url))
-            self::$url = new URL($_SERVER['REQUEST_URI']);
-        return self::$url->inPath($key);
+    public function issetPath($key) {
+        if(!is_null($this->url))
+            return $this->url->inPath($key);
+        else
+            return false;
     }
-    public static function getPath($key) {
-        if(is_null(self::$url))
-            self::$url = new URL($_SERVER['REQUEST_URI']);
-        return self::$url->inPath($key, true);
+    public function getPath($key) {
+        if(!is_null($this->url))
+            return $this->url->inPath($key, true);
+        else
+            return false;
     }
 }

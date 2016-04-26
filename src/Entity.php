@@ -108,7 +108,7 @@ class Entity extends Object {
             $this->setChange($key);
         }
         $this->__construct();
-        return !$this->hasChanges();
+        return !$this->hasErrors();
     }
     public function save($forceInsert = false, $ignore = false) {
         if(!$this->hasChanges())

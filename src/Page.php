@@ -10,6 +10,7 @@ class Page extends Object {
     public $title = '';
     public $description;
     public $keywords = array();
+    public $uri = '';
     public $canonical = '';
     public $shortlink = '';
     public $metadata = array();
@@ -92,5 +93,8 @@ class Page extends Object {
         if(isset($this->modules[$position]))
             return $this->modules[$position];
         return array();
+    }
+    public function preTitle($title) {
+        $this->title = $title.' - '.$this->title;
     }
 }
