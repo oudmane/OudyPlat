@@ -44,7 +44,7 @@ class Entity extends Object {
     public function loadBySQLConditions($conditions, $values = array()) {
         $class = get_class($this);
         $fetch = MySQL::select(array(
-            'columns'=> $class::columns,
+            'columns'=> $class::columns(),
             'table'=> $class::table,
             'conditions'=> $conditions
         ), $values)->fetch();
@@ -65,7 +65,7 @@ class Entity extends Object {
         $class = get_class($this);
         $values = array();
         $i = 0;
-        foreach(explode(',', $class::key) as $key)
+        foreach(explode(',', $class::key()) as $key)
             $values[':'.$key] = $args[$i++];
         return $this->loadBySQLConditions(
             implode(
@@ -74,7 +74,7 @@ class Entity extends Object {
                     function($key) {
                         return $key.' = :'.$key;
                     },
-                    explode(',', $class::key)
+                    explode(',', $class::key())
                 )
             ), $values);
     }
@@ -114,17 +114,17 @@ class Entity extends Object {
         if(!$this->hasChanges())
             return false;
         $class = get_class($this);
-        $key = $class::key;
+        $key = $class::key();
         $query = '';
         $values = array();
         if(count($keys = explode(',', $key)) > 1) {
             $query = SQL::insert(array(
-                'columns'=> self::columns,
+                'columns'=> self::columns(),
                 'table'=> self::table,
                 'key'=> $keys,
                 'update'=> true
             ));
-            $values = SQL::buildValues($this, self::columns);
+            $values = SQL::buildValues($this, self::columns());
         } else if($this->$key && !$forceInsert) {
             $query = SQL::update(array(
                 'columns'=> $this->changes,
@@ -135,11 +135,11 @@ class Entity extends Object {
             $values[':'.$key] = $this->$key;
         } else {
             $query = SQL::insert(array(
-                'columns'=> $class::columns,
+                'columns'=> $class::columns(),
                 'table'=> $class::table,
                 'ignore'=> $ignore
             ));
-            $values = SQL::buildValues($this, $class::columns);
+            $values = SQL::buildValues($this, $class::columns());
         }
         $statement = new MySQL($query, $values);
         if(count($keys) == 1 && !$this->$key)
@@ -148,7 +148,7 @@ class Entity extends Object {
     }
     public function remove() {
         $class = get_class($this);
-        $key = $class::key;
+        $key = $class::key();
         $conditions = '';
         $values = array();
         if(count($keys = explode(',', $key)) > 1) {
@@ -312,7 +312,7 @@ class Entity extends Object {
     public static function getAllBySQLConditions($conditions, $values = array()) {
         $class = get_called_class();
         return MySQL::select(array(
-            'columns'=> $class::columns,
+            'columns'=> $class::columns(),
             'table'=> $class::table,
             'conditions'=> $conditions
         ), $values)->fetchAllClass($class);
@@ -344,7 +344,7 @@ class Entity extends Object {
     public static function existWithSQLConditions($conditions, $values = array()) {
         $class = get_called_class();
         return MySQL::select(array(
-            'columns'=> $class::key,
+            'columns'=> $class::key(),
             'table'=> $class::table,
             'conditions'=> $conditions
         ), $values)->fetchAllColumn();
@@ -397,5 +397,21 @@ class Entity extends Object {
                     return $key.' = :'.$key;
                 }, array_keys($conditions))
             ), SQL::buildValues($conditions, array_keys($conditions)));
+    }
+    public static function columns($select = true) {
+        $class = get_called_class();
+        if(defined($class.'::columns') && $class::columns)
+            return $class::columns;
+        else {
+            return implode(',', array_keys(call_user_func('get_object_vars', new $class())));
+        }
+    }
+    public static function key() {
+        $class = get_called_class();
+        if(defined($class.'::key') && $class::key)
+            return $class::key;
+        else {
+            return explode(',', $class::columns())[0];
+        }
     }
 }
