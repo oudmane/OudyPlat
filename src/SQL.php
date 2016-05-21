@@ -97,7 +97,8 @@ class SQL {
 			case 'object':
 				$columns = get_object_vars($columns);
 			case 'array':
-			if(array_keys($columns) === range(0, count($columns) - 1)) $columns = array_flip($columns);
+			    if(array_keys($columns) === range(0, count($columns) - 1))
+                    $columns = array_flip($columns);
 				return implode(',', array_keys($columns));
 			break;
 			default:
