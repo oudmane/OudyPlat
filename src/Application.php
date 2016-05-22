@@ -22,8 +22,8 @@ class Application {
         $this->session = ($handler = Session::getHandler()) ? new $handler() : new Session();
         $this->template = new Template();
         $this->request = new Request();
-        if(Language::$language)
-            $this->language = new Language(Language::$language);
+        if(Language::$defaultLanguage)
+            $this->language = new Language(Language::$defaultLanguage);
     }
     /**
      * 
