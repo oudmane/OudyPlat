@@ -15,12 +15,15 @@ class Application {
     public $session = null;
     public $template = null;
     public $request = null;
+    public $language = null;
     public $redirect = true;
     public static $socket = false;
     public function __construct() {
         $this->session = ($handler = Session::getHandler()) ? new $handler() : new Session();
         $this->template = new Template();
         $this->request = new Request();
+        if(Language::$language)
+            $this->language = new Language(Language::$language);
     }
     /**
      * 
@@ -30,6 +33,7 @@ class Application {
     public function load($page) {
         $session = $this->session;
         $request = $this->request;
+        $language = $this->language;
         if(!self::$socket) {
             $request->load('get', $_GET);
             $request->load('post', $_POST);
@@ -151,6 +155,7 @@ class Application {
         $data = $page->data;
         $template = $page->template;
         $request = $this->request;
+        $language = $this->language;
         switch($module) {
             case 'layout':
                 include TEMPLATES_PATH.$template->name.'/layout/'.$template->layout.'.php';
