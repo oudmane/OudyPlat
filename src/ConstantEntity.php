@@ -29,4 +29,11 @@ class ConstantEntity extends Object {
             if(array_key_exists($key, $class::$data))
                 $this->__construct($class::$data[$key]);
     }
+    public static function getAll() {
+        $class = get_called_class();
+        $all = array();
+        foreach($class::$data as $id => $object)
+            array_push($all, new $class($object));
+        return $all;
+    }
 }
