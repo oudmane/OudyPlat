@@ -5,17 +5,26 @@ namespace OudyPlat;
 class Application {
     /**
      *
-     * @var \OudyPlat\Page 
+     * @var Page
      */
-    public $page = null;
+    protected $page = null;
     /**
      *
-     * @var \OudyPlat\Session 
+     * @var Session
      */
     public $session = null;
-    public $template = null;
+    /**
+     * @var Template
+     */
+    protected $template = null;
+    /**
+     * @var Request
+     */
     public $request = null;
-    public $language = null;
+    /**
+     * @var Language
+     */
+    protected $language = null;
     public $redirect = true;
     public static $socket = false;
     public function __construct() {
