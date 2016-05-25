@@ -45,7 +45,13 @@ class Object {
                     $functionName = $functionName[0][1];
                     if(preg_match('/^\w+:\w+\([A-z0-9,]+\)/', $function[0])) {
                         $params = preg_replace('/^\w+:\w+\(|\)$/', '', $function[0]);
-                        $data->$key = $data->$functionName($params);
+                        $data->$key = call_user_func_array(
+                            array(
+                                $data,
+                                $functionName
+                            ),
+                            explode(',', $params)
+                        );
                     } else
                         $data->$key = $data->$functionName();
                 }
