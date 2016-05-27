@@ -355,7 +355,7 @@ class Entity extends Object {
      * @param boolean $all
      * @return array
      */
-    public function existWithConditions($conditions, $all = true) {
+    public static function existWithConditions($conditions, $all = true) {
         if(empty($conditions))
             return false;
         $class = get_called_class();
@@ -402,9 +402,11 @@ class Entity extends Object {
         $class = get_called_class();
         if(defined($class.'::columns') && $class::columns)
             return $class::columns;
-        else {
-            return implode(',', array_keys(call_user_func('get_object_vars', new $class())));
-        }
+        else
+            if($columns = implode(',', array_keys(call_user_func('get_object_vars', new $class()))))
+                return $columns;
+            else
+                return '*';
     }
     public static function key() {
         $class = get_called_class();
