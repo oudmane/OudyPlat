@@ -62,6 +62,7 @@ class Entity extends Object {
             return false;
         if(gettype($args[0]) == 'array')
             $args = $args[0];
+        $args = array_filter($args);
         $class = get_class($this);
         $values = array();
         $i = 0;
