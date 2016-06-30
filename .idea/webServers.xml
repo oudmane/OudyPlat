@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="ec3318b6-f9b5-4ad3-85c4-bfa597595399" name="Brasal" url="http://server.brasal.ma">
+        <fileTransfer host="server.brasal.ma" port="22" privateKey="C:\Users\yuxte\Desktop\Keys\Brasal.ppk" accessType="SFTP" username="root" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

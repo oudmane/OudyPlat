@@ -58,11 +58,11 @@ class Entity extends Object {
      */
     public function loadByKey() {
         $args = func_get_args();
-        if(empty($args))
-            return false;
         if(gettype($args[0]) == 'array')
             $args = $args[0];
         $args = array_filter($args);
+        if(empty($args))
+            return false;
         $class = get_class($this);
         $values = array();
         $i = 0;
