@@ -52,8 +52,10 @@ class Object {
                             ),
                             explode(',', $params)
                         );
-                    } else
+                    } else if(method_exists($data, $functionName))
                         $data->$key = $data->$functionName();
+                    else if(property_exists($data, $functionName))
+                        $data->$key = $data->$functionName;
                 }
                 if(preg_match('/\w+(:\w+(\([A-z0-9,]+\))?)?(\.(\(((?>[^()]+)|(?-2))*\)))/', $property)) {
                     $columns = preg_replace('/^\w+(:\w+(\([A-z0-9,]+\))?)?\.\(|\)$/', '', $property);
