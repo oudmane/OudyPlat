@@ -120,9 +120,10 @@ class Entity extends Object {
         $values = array();
         if(count($keys = explode(',', $key)) > 1) {
             $query = SQL::insert(array(
-                'columns'=> self::columns(),
-                'table'=> self::table,
+                'columns'=> $class::columns(),
+                'table'=> $class::table,
                 'key'=> $keys,
+                'changes'=> $this->changes,
                 'update'=> true
             ));
             $values = SQL::buildValues($this, self::columns());

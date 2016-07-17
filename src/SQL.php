@@ -75,10 +75,13 @@ class SQL {
         if(isset($query['update'])) {
             $set = array();
             $sql[] = 'ON DUPLICATE KEY UPDATE';
-            foreach($columns as $column)
+            foreach(((isset($query['changes']) && !empty($query['changes'])) ? $query['changes'] : $columns) as $column)
                 if(!in_array($column, $query['key']))
                     $set[] = "\t".$column.' = :'.$column;
-            $sql[] = implode(",\n", $set);
+            if($set)
+                $sql[] = implode(",\n", $set);
+            else
+                array_pop($sql);
         }
         
         return implode("\n", $sql);
