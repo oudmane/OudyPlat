@@ -10,7 +10,7 @@ class Entity extends Object {
     protected $changes = array();
     protected $errors = array();
     /**
-     * 
+     *
      * @param array|object|string $data
      * @param array|object|string $allowedProperties
      * @param bool $forceAll
@@ -28,15 +28,32 @@ class Entity extends Object {
             }
         $class = get_class($this);
         if(defined($class.'::types') && $class::types) {
-            $types = explode(';', $class::types);
-            foreach($types as $type) {
-                list($key, $value) = explode(':', $type);
-                $this->$key = new $value($this->$key);
+            $types = array();
+            switch(gettype($class::types)) {
+                case 'string':
+                    $types = explode(';', $class::types);
+                    $nTypes = array();
+                    foreach($types as $type) {
+                        list($key, $value) = explode(':', $type);
+                        $nTypes[$key] = $value;
+                    }
+                    $types = $nTypes;
+                    break;
+                case 'array':
+                    $types = $class::types;
+                    break;
+            }
+            foreach($types as $key=>$value) {
+                switch($value) {
+                    default:
+                        $this->$key = new $value($this->$key);
+                        break;
+                }
             }
         }
     }
     /**
-     * 
+     *
      * @param string $conditions
      * @param array $values
      * @return boolean
@@ -53,7 +70,7 @@ class Entity extends Object {
         return $fetch ? true : false;
     }
     /**
-     * 
+     *
      * @param string|array $key, primary keys
      */
     public function loadByKey() {
@@ -80,7 +97,7 @@ class Entity extends Object {
             ), $values);
     }
     /**
-     * 
+     *
      * @param array $conditions
      * @param boolean $all
      * @return boolean
@@ -97,7 +114,7 @@ class Entity extends Object {
             ), SQL::buildValues($conditions, array_keys($conditions)));
     }
     /**
-     * 
+     *
      * @param array|object $data
      * @param array|object|string $allowedProperties
      * @param bool $forceAll
@@ -175,7 +192,7 @@ class Entity extends Object {
         return true;
     }
     /**
-     * 
+     *
      * @param string $key
      * @param string $error
      */
@@ -183,7 +200,7 @@ class Entity extends Object {
         $this->errors[$key] = $error;
     }
     /**
-     * 
+     *
      * @param string $key
      * @return string
      */
@@ -191,21 +208,21 @@ class Entity extends Object {
         return isset($this->errors[$key]) ? $this->errors[$key] : false;
     }
     /**
-     * 
+     *
      * @return boolean
      */
     public function hasErrors() {
         return count($this->errors) ? true : false;
     }
     /**
-     * 
+     *
      * @return array
      */
     public function getErrors() {
         return $this->errors;
     }
     /**
-     * 
+     *
      * @param string $key
      * @param string $error
      */
@@ -215,11 +232,11 @@ class Entity extends Object {
                 unset($this->errors[$key]);
             else
                 if($this->errors[$key] == $error)
-                   unset($this->errors[$key]); 
-        
+                    unset($this->errors[$key]);
+
     }
     /**
-     * 
+     *
      * @param string $key,
      */
     public function unsetErrors() {
@@ -231,7 +248,7 @@ class Entity extends Object {
                 $this->unsetError($key);
     }
     /**
-     * 
+     *
      * @param string $key
      */
     public function setChange($key) {
@@ -243,7 +260,7 @@ class Entity extends Object {
             array_splice($this->changes, $index, 1);
     }
     /**
-     * 
+     *
      * @param string $key
      * @return boolean
      */
@@ -251,21 +268,21 @@ class Entity extends Object {
         return in_array($key, $this->changes);
     }
     /**
-     * 
+     *
      * @return boolean
      */
     public function hasChanges() {
         return count($this->changes) ? true : false;
     }
     /**
-     * 
+     *
      * @return array
      */
     public function getChanges() {
         return $this->changes;
     }
     /**
-     * 
+     *
      * @param string|array $key, primary keys
      * @return \OudyPlat\Object
      */
@@ -278,7 +295,7 @@ class Entity extends Object {
             return null;
     }
     /**
-     * 
+     *
      * @param string $conditions
      * @param array $values
      * @return \OudyPlat\Object
@@ -292,7 +309,7 @@ class Entity extends Object {
             return null;
     }
     /**
-     * 
+     *
      * @param array $conditions
      * @param boolean $all
      * @return \OudyPlat\Object
@@ -306,7 +323,7 @@ class Entity extends Object {
             return null;
     }
     /**
-     * 
+     *
      * @param string $conditions
      * @param array $values
      * @return array
@@ -320,7 +337,7 @@ class Entity extends Object {
         ), $values)->fetchAllClass($class);
     }
     /**
-     * 
+     *
      * @param array $conditions
      * @param boolean $all
      * @return array
@@ -338,7 +355,7 @@ class Entity extends Object {
             ), SQL::buildValues($conditions, array_keys($conditions)));
     }
     /**
-     * 
+     *
      * @param string $conditions
      * @param array $values
      * @return array
@@ -352,7 +369,7 @@ class Entity extends Object {
         ), $values)->fetchAllColumn();
     }
     /**
-     * 
+     *
      * @param array $conditions
      * @param boolean $all
      * @return array
@@ -370,7 +387,7 @@ class Entity extends Object {
             ), SQL::buildValues($conditions, array_keys($conditions)));
     }
     /**
-     * 
+     *
      * @param string $conditions
      * @param array $values
      * @return array
@@ -383,7 +400,7 @@ class Entity extends Object {
         ), $values);
     }
     /**
-     * 
+     *
      * @param array $conditions
      * @param boolean $all
      * @return array
