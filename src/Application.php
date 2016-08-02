@@ -109,7 +109,7 @@ class Application {
      * 
      * @param string $header
      */
-    public function setHeader($header) {
+    public function setHeader($header, $replace = true) {
         $headers = array (
             100 => 'HTTP/1.1 100 Continue',
             101 => 'HTTP/1.1 101 Switching Protocols',
@@ -156,7 +156,7 @@ class Application {
             'oudyplat' => 'X-Powered-By: OudyPlat 2.5'
         );
         if(!self::$socket)
-            header(isset($headers[$header]) ? $headers[$header] : $header);
+            header(isset($headers[$header]) ? $headers[$header] : $header, $replace);
     }
     public function render($module = 'layout', $position = null) {
         $session = $this->session;
