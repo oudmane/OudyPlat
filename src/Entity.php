@@ -44,7 +44,6 @@ class Entity extends Object {
                     break;
             }
             foreach($types as $key=>$class) {
-                echo $this->$key;
                 switch(gettype($data = @json_decode($this->$key))) {
                     case 'array':
                         if($class)
