@@ -43,10 +43,18 @@ class Entity extends Object {
                     $types = $class::types;
                     break;
             }
-            foreach($types as $key=>$value) {
-                switch($value) {
+            foreach($types as $key=>$class) {
+                echo $this->$key;
+                switch(gettype($data = @json_decode($this->$key))) {
+                    case 'array':
+                        if($class)
+                            for ($i=0; $i<count($data); $i++)
+                                $data[$i] = new $class($data[$i]);
+                        $this->$key = $data;
+                        break;
                     default:
-                        $this->$key = new $value($this->$key);
+                        if($class)
+                            $this->$key = new $class($this->$key);
                         break;
                 }
             }
