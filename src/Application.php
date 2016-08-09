@@ -7,7 +7,7 @@ class Application {
      *
      * @var Page
      */
-    protected $page = null;
+    public $page = null;
     /**
      *
      * @var Session
@@ -16,7 +16,7 @@ class Application {
     /**
      * @var Template
      */
-    protected $template = null;
+    public $template = null;
     /**
      * @var Request
      */
@@ -24,7 +24,7 @@ class Application {
     /**
      * @var Language
      */
-    protected $language = null;
+    public $language = null;
     public $redirect = true;
     public static $socket = false;
     public function __construct() {
