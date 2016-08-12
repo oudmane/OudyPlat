@@ -50,7 +50,7 @@ class Application {
             $request->load('url', $page->url);
         }
         $page->template = $this->template->forPage($page);
-        $data = $page->data;
+        $data = &$page->data;
         $load = null;
         $this->page = $page;
         if(file_exists($controller = COMPONENTS_PATH.'system/controller.php'))
