@@ -29,9 +29,13 @@ class Object {
             // convert the allowed types to arrays if it's an object
             else if(gettype($allowedProperties) == 'object')
                 $allowedProperties = array_keys(get_object_vars($allowedProperties));
-            // convert the allowed types to arrays if it's an associative array
-            else if(array_keys($allowedProperties) !== range(0, count($allowedProperties) - 1))
-                $allowedProperties = array_keys($allowedProperties);
+            // if it's an array
+            else if(gettype($allowedProperties) == 'array')
+                // convert the allowed types to arrays if it's an associative array
+                if(array_keys($allowedProperties) !== range(0, count($allowedProperties) - 1))
+                    $allowedProperties = array_keys($allowedProperties);
+                else
+                    return $this->__construct($data, self::map($allowedProperties), $forceAll);
         foreach($allowedProperties as $property) {
             if(!preg_match('/^\w+$/', $property)) {
                 // get the key
@@ -107,5 +111,24 @@ class Object {
             }, $value) : $value->$key;
         }
         return $value;
+    }
+    public static function map($map) {
+        $elements = array();
+        foreach($map as $key)
+            if(is_array($key)) {
+                list($alias, $property, $keys) = $key;
+                $element = array($alias);
+                if($property) {
+                    if(is_array($property))
+                        array_push($element, ':'.$property[0].'('.join(',', $property[1]).')');
+                    else
+                        array_push($element, ':'.$property);
+                }
+                if($keys)
+                    array_push($element, '.('.self::map($keys).')');
+                array_push($elements, join('', $element));
+            } else if(is_string($key))
+                array_push($elements, $key);
+        return implode(',', $elements);
     }
 }
