@@ -66,7 +66,11 @@ class Application {
             $load = include($controller);
         else
             $notyet = true;
-        if(file_exists($controller = COMPONENTS_PATH.$page->component.'/controllers/'.$page->task.'.php'))
+        if(file_exists($controller = COMPONENTS_PATH.$page->component.'/tasks/'.$page->task.'/controller.php'))
+            $load = include($controller);
+        else if(file_exists($controller = COMPONENTS_PATH.$page->component.'/controllers/'.$page->task.'.php'))
+            $load = include($controller);
+        else if(defined('PARENT_COMPONENTS_PATH') && file_exists($controller = PARENT_COMPONENTS_PATH.$page->component.'/tasks/'.$page->task.'/controller.php'))
             $load = include($controller);
         else if(defined('PARENT_COMPONENTS_PATH') && file_exists($controller = PARENT_COMPONENTS_PATH.$page->component.'/controllers/'.$page->task.'.php'))
             $load = include($controller);
@@ -186,7 +190,11 @@ class Application {
                     include $view;
                 else
                     $notyet = true;
-                if(file_exists($view = COMPONENTS_PATH.$page->component.'/views/'.$page->task.'.php'))
+                if(file_exists($view = COMPONENTS_PATH.$page->component.'/tasks/'.$page->task.'/view.php'))
+                    include $view;
+                else if(file_exists($view = COMPONENTS_PATH.$page->component.'/views/'.$page->task.'.php'))
+                    include $view;
+                else if(defined('PARENT_COMPONENTS_PATH') && file_exists($view = PARENT_COMPONENTS_PATH.$page->component.'/tasks/'.$page->task.'/view.php'))
                     include $view;
                 else if(defined('PARENT_COMPONENTS_PATH') && file_exists($view = PARENT_COMPONENTS_PATH.$page->component.'/views/'.$page->task.'.php'))
                     include $view;
@@ -200,7 +208,11 @@ class Application {
                     include $api;
                 else
                     $notyet = true;
-                if(file_exists($api = COMPONENTS_PATH.$page->component.'/apis/'.$page->task.'.php'))
+                if(file_exists($api = COMPONENTS_PATH.$page->component.'/tasks/'.$page->task.'/api.php'))
+                    include $api;
+                else if(file_exists($api = COMPONENTS_PATH.$page->component.'/apis/'.$page->task.'.php'))
+                    include $api;
+                else if(defined('PARENT_COMPONENTS_PATH') && file_exists($api = PARENT_COMPONENTS_PATH.$page->component.'/tasks/'.$page->task.'/api.php'))
                     include $api;
                 else if(defined('PARENT_COMPONENTS_PATH') && file_exists($api = PARENT_COMPONENTS_PATH.$page->component.'/apis/'.$page->task.'.php'))
                     include $api;
