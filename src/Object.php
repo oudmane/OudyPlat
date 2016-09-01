@@ -62,13 +62,14 @@ class Object {
                 }
                 if(preg_match('/\w+(:\w+(\([A-z0-9,]+\))?)?(\.(\(((?>[^()]+)|(?-2))*\)))/', $property)) {
                     $columns = preg_replace('/^\w+(:\w+(\([A-z0-9,]+\))?)?\.\(|\)$/', '', $property);
-                    if(gettype($data->$key) == 'array') {
-                        $keydata = $data->$key;
-                        $data->$key = array();
-                        for($i = 0; $i < count($keydata); $i++)
-                            array_push($data->$key, new Object($keydata[$i], $columns));
-                    } else
-                        $data->$key = new Object($data->$key, $columns);
+                    if(isset($data->$key))
+                        if(gettype($data->$key) == 'array') {
+                            $keydata = $data->$key;
+                            $data->$key = array();
+                            for($i = 0; $i < count($keydata); $i++)
+                                array_push($data->$key, new Object($keydata[$i], $columns));
+                        } else
+                            $data->$key = new Object($data->$key, $columns);
                 }
                 $property = $key;
             }
