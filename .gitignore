@@ -1,4 +1,2 @@
-composer.phar
-/vendor/
-/nbproject/
-.vscode
+vendor/
+composer.lock

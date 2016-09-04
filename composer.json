@@ -4,9 +4,9 @@
     "type": "library",
     "version": "2.5.0",
     "minimum-stability": "stable",
-    "license": "Apache-2.0",
+    "license": "MIT",
     "homepage": "https://github.com/Oudmane/OudyPlat",
-    "keywords": ["oudyplat", "oudy", "plat", "php", "web", "application"],
+    "keywords": ["oudyplat", "oudy", "plat", "php", "web", "application", "framework"],
     "authors": [
         {
             "name": "Ayoub Oudmane",
@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php" : ">=5.4"
+        "php" : ">=5.5.9"
     },
     "autoload": {
         "psr-4": {
